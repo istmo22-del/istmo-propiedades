@@ -1,0 +1,38 @@
+{
+  "name": "istmo-propiedades",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portal inmobiliario para Panamá — Next.js + Supabase + Cloudflare",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.0",
+    "lucide-react": "^1.73.0",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.17",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^22.19.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.5",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.163.0"
+  }
+}
