@@ -8,7 +8,7 @@ export const site = {
   shortName: "Istmo",
   tagline: "Bienes raíces en Panamá",
   description:
-    "Casas, apartamentos, fincas y propiedades frente al mar en Panamá. Asesoría personalizada para comprar, vender o alquilar.",
+    "Casas, apartamentos y fincas en Ciudad de Panamá, David, Boquete y Coronado. Fotos reales de cada propiedad y respuesta el mismo día.",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, ""),
   locale: "es_PA",
 

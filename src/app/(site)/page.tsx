@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const trustPoints = ["Atención personalizada", "Fotos y datos reales", "Respuesta el mismo día"];
+const trustPoints = ["Fotos reales de cada propiedad", "Respuesta el mismo día", "Un solo asesor de principio a fin"];
 
 const values = [
   {
@@ -122,8 +122,9 @@ export default async function HomePage() {
               <span className="font-light text-gold italic">en Panamá.</span>
             </h1>
             <p className="mt-6 max-w-xl text-[15px] leading-7 text-cream/75 sm:text-base">
-              Casas, apartamentos, fincas y propiedades frente al mar. Te acompañamos a
-              encontrar el espacio que se adapta a tu vida —o a tu próximo proyecto.
+              Apartamentos en San Francisco, casas en David, fincas en Boquete y playas
+              en Coronado. Te acompañamos a encontrar el espacio que se adapta a tu vida
+              o a tu próximo proyecto.
             </p>
           </div>
 
@@ -273,8 +274,9 @@ export default async function HomePage() {
               ¿Qué tipo de propiedad buscas?
             </h2>
             <p className="mt-4 text-sm leading-6 text-muted">
-              Desde un apartamento en la ciudad hasta una finca productiva o una casa frente
-              al mar. Empieza por la categoría que mejor se adapte a tu plan.
+              Desde un apartamento en El Cangrejo hasta una finca en Dolega o una casa
+              frente al mar en Coronado. Empieza por la categoría que mejor se adapte
+              a tu plan.
             </p>
           </div>
 
@@ -283,7 +285,7 @@ export default async function HomePage() {
               <Link
                 key={category.name}
                 href={`/propiedades?type=${encodeURIComponent(category.name)}`}
-                className="group flex flex-col justify-between gap-8 rounded-2xl bg-cream/70 p-4 ring-1 ring-line transition-all hover:-translate-y-0.5 hover:bg-white hover:ring-gold/40 hover:shadow-card"
+                className="group flex flex-col justify-between gap-8 rounded-2xl bg-cream/70 p-4 ring-1 ring-line transition-colors hover:bg-white hover:ring-gold/40"
               >
                 <span className="grid size-11 place-items-center rounded-xl bg-deep/[0.06] text-teal transition-colors group-hover:bg-deep group-hover:text-cream">
                   <CategoryIcon category={category.name} className="size-5" />
@@ -311,8 +313,9 @@ export default async function HomePage() {
               Explora por provincia.
             </h2>
             <p className="mt-4 max-w-md text-sm leading-6 text-muted">
-              Panamá es mucho más que su capital. Encuentra propiedades en el Pacífico, en
-              las montañas de Chiriquí, en el Caribe o en el interior del país.
+              Panamá es mucho más que su capital. Propiedades en las montañas de Boquete
+              y Volcán, en las playas de Coronado, en el Caribe de Bocas del Toro o en el
+              interior del país.
             </p>
             <ButtonLink href="/propiedades" className="mt-7" size="md">
               Ver todo el portafolio
@@ -371,9 +374,9 @@ export default async function HomePage() {
               Bienes raíces con criterio local.
             </h2>
             <p className="mt-5 text-sm leading-7 text-muted">
-              Conocemos Panamá: sus barrios, sus playas, el clima de cada región y lo que
-              realmente significa vivir allí. Por eso cada ficha incluye información honesta
-              y fotos que muestran la propiedad tal como es.
+              Conocemos Panamá: el frío de Boquete, el calor de David y el tráfico de la
+              capital a las 8:00 a. m. Por eso cada ficha incluye información honesta y
+              fotos que muestran la propiedad tal como es.
             </p>
 
             <ul className="mt-8 space-y-6">

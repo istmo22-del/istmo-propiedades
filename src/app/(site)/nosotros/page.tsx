@@ -76,7 +76,8 @@ export default function AboutPage() {
           <div className="space-y-5 text-[14.5px] leading-7 text-ink/75">
             <p>
               Panamá ofrece algo difícil de encontrar en otros lugares: playas a una hora de la
-              ciudad, montañas con clima fresco, ciudad cosmopolita y un interior tranquilo. Pero
+              capital, montañas con clima fresco en Boquete y Volcán, ciudad cosmopolita y un
+              interior tranquilo. Pero
               elegir bien depende de detalles que no aparecen en un anuncio: accesos, servicios,
               humedad, plusvalía y estilo de vida.
             </p>
