@@ -4,7 +4,9 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
+  Clock,
   Handshake,
+  Home,
   KeyRound,
   MapPin,
   MessageCircle,
@@ -13,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { site, whatsappLink } from "@/config/site";
+import { PROPERTY_COLLECTIONS, collectionHref, type CollectionKey } from "@/lib/collections";
 import { getHomeData } from "@/lib/properties";
 import { formatNumber } from "@/lib/utils";
 import { ButtonLink } from "@/components/ui/button";
@@ -48,8 +51,29 @@ const values = [
   },
 ];
 
+const collectionVisuals: Record<
+  CollectionKey,
+  { icon: typeof KeyRound; iconClass: string; bar: string }
+> = {
+  "alquileres-chiriqui": {
+    icon: KeyRound,
+    iconClass: "bg-teal-50 text-teal ring-1 ring-teal/15",
+    bar: "bg-teal",
+  },
+  "casas-venta-david": {
+    icon: Home,
+    iconClass: "bg-gold-100 text-gold-700 ring-1 ring-gold/30",
+    bar: "bg-gold",
+  },
+  "propiedades-recientes": {
+    icon: Clock,
+    iconClass: "bg-leaf-50 text-leaf ring-1 ring-leaf/20",
+    bar: "bg-leaf",
+  },
+};
+
 export default async function HomePage() {
-  const { total, featured, categories, provinces } = await getHomeData();
+  const { total, featured, collections, categories, provinces } = await getHomeData();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -84,7 +108,7 @@ export default async function HomePage() {
           fetchPriority="high"
         />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/75 via-ink/35 to-ink/85" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(75%_55%_at_18%_28%,rgba(15,61,58,0.5),transparent_70%)]" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(75%_55%_at_18%_28%,rgba(11,79,138,0.55),transparent_70%)]" />
 
         <div className="container-page relative pt-32 pb-10 sm:pb-14">
           <div className="max-w-3xl animate-rise">
@@ -151,6 +175,57 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
+
+      {/* Colecciones curadas */}
+      {PROPERTY_COLLECTIONS.map((collection, index) => {
+        const items = collections[collection.key];
+        if (!items || items.length === 0) return null;
+
+        const visual = collectionVisuals[collection.key];
+        const Icon = visual.icon;
+
+        return (
+          <section
+            key={collection.key}
+            className={`border-b border-line py-16 lg:py-20 ${
+              index % 2 === 0 ? "bg-white" : "bg-sand/50"
+            }`}
+          >
+            <div className="container-page">
+              <div className="flex flex-wrap items-end justify-between gap-6">
+                <div className="max-w-2xl">
+                  <p className="eyebrow flex items-center gap-2.5 text-gold">
+                    <span
+                      className={`grid size-7 place-items-center rounded-lg ${visual.iconClass}`}
+                    >
+                      <Icon className="size-3.5" aria-hidden="true" />
+                    </span>
+                    {collection.eyebrow}
+                  </p>
+                  <h2 className="mt-3 text-balance font-display text-3xl leading-[1.12] sm:text-4xl">
+                    {collection.title}
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-muted">{collection.description}</p>
+                </div>
+                <ButtonLink href={collectionHref(collection)} variant="outline" size="sm">
+                  Ver todas
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </ButtonLink>
+              </div>
+
+              <div className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+                {items.map((property, itemIndex) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    eager={index === 0 && itemIndex === 0}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })}
 
       {/* Destacadas */}
       <section className="py-20 lg:py-24">
@@ -327,7 +402,7 @@ export default async function HomePage() {
       <section className="py-20 lg:py-24">
         <div className="container-page">
           <div className="relative isolate overflow-hidden rounded-[2rem] bg-deep px-6 py-14 text-cream sm:px-12 lg:px-16 lg:py-20">
-            <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_120%_at_85%_10%,rgba(195,155,90,0.28),transparent_60%)]" />
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_120%_at_85%_10%,rgba(232,185,63,0.26),transparent_60%)]" />
             <div className="absolute -right-10 -bottom-16 -z-10 font-display text-[220px] leading-none text-white/[0.035] select-none">
               Istmo
             </div>

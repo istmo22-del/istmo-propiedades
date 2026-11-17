@@ -180,7 +180,7 @@ export function ImageManager({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={imageUrl(source)} alt="" className="h-full w-full object-cover" />
               {index === 0 && (
-                <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-gold px-2 py-0.5 text-[9.5px] font-bold tracking-wide text-[#1c1913] uppercase">
+                <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-gold px-2 py-0.5 text-[9.5px] font-bold tracking-wide text-ink uppercase">
                   <Star className="size-2.5" aria-hidden="true" />
                   Portada
                 </span>
@@ -219,7 +219,7 @@ export function ImageManager({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={item.url} alt="" className="h-full w-full object-cover" />
               {existing.length === 0 && index === 0 && (
-                <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-gold px-2 py-0.5 text-[9.5px] font-bold tracking-wide text-[#1c1913] uppercase">
+                <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-gold px-2 py-0.5 text-[9.5px] font-bold tracking-wide text-ink uppercase">
                   <Star className="size-2.5" aria-hidden="true" />
                   Portada
                 </span>

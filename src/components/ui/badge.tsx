@@ -9,7 +9,7 @@ type Tone = "dark" | "glass" | "gold" | "sand" | "green" | "amber" | "slate";
 const tones: Record<Tone, string> = {
   dark: "bg-deep text-cream",
   glass: "bg-white/90 text-ink backdrop-blur-sm shadow-sm",
-  gold: "bg-gold-100 text-[#6a4d1c]",
+  gold: "bg-gold-100 text-ink",
   sand: "bg-sand text-ink/80",
   green: "bg-emerald-50 text-emerald-800 ring-1 ring-inset ring-emerald-600/15",
   amber: "bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-600/15",

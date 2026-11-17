@@ -1,5 +1,5 @@
 -- ============================================================================
---  ISTMO PROPIEDADES · Esquema de base de datos para Supabase
+--  ISTMO REALTY · Esquema de base de datos para Supabase
 --  Ejecutar completo en: Supabase Dashboard → SQL Editor → New query → Run
 --  Es idempotente: puedes volver a ejecutarlo sin perder datos.
 -- ============================================================================

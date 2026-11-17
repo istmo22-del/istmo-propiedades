@@ -52,7 +52,7 @@ export default async function EditPropertyPage({ params }: PageProps) {
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <StatusBadge status={property.status} />
               {property.is_featured && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-gold-100 px-2.5 py-1 text-[11px] font-semibold text-[#6a4d1c]">
+                <span className="inline-flex items-center gap-1 rounded-full bg-gold-100 px-2.5 py-1 text-[11px] font-semibold text-ink">
                   <Star className="size-3 fill-current" aria-hidden="true" />
                   Destacada
                 </span>

@@ -29,7 +29,11 @@ function buildHeading(filters: ReturnType<typeof parseFilters>): string {
       : filters.transaction === "Alquiler"
         ? "en alquiler"
         : "";
-  const place = filters.province ? `en ${filters.province}` : "en Panamá";
+  const place = filters.district
+    ? `en ${filters.district}`
+    : filters.province
+      ? `en ${filters.province}`
+      : "en Panamá";
 
   return [subject, operation, place].filter(Boolean).join(" ");
 }

@@ -2,6 +2,7 @@ import { ChevronDown, Search } from "lucide-react";
 
 import { PANAMA_PROVINCES } from "@/lib/panama";
 import { PROPERTY_CATEGORIES } from "@/lib/types";
+import { CategorySelect } from "@/components/search/category-select";
 
 const priceSuggestions = [
   { label: "Hasta US$ 150,000", value: "150000" },
@@ -37,7 +38,13 @@ export function HeroSearch() {
         </div>
       </fieldset>
 
-      <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-[1.1fr_1.2fr_1fr_auto]">
+      <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-[1.05fr_1.05fr_1.2fr_1fr_auto]">
+        <CategorySelect
+          id="hero-category"
+          selectClassName="h-12"
+          className="sm:col-span-2 lg:col-span-1"
+        />
+
         <div className="relative">
           <label htmlFor="hero-province" className="sr-only">
             Provincia
@@ -109,7 +116,7 @@ export function HeroSearch() {
 
         <button
           type="submit"
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-7 text-sm font-bold tracking-tight text-[#1c1913] transition-colors hover:bg-[#d0aa6b]"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold px-7 text-sm font-bold tracking-tight text-ink transition-colors hover:bg-gold-700"
         >
           <Search className="size-4" aria-hidden="true" />
           Buscar

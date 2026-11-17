@@ -4,7 +4,7 @@
  * Reemplaza los datos de ejemplo por los reales antes de publicar.
  */
 export const site = {
-  name: "Istmo Propiedades",
+  name: "Istmo Realty",
   shortName: "Istmo",
   tagline: "Bienes raíces en Panamá",
   description:
@@ -16,7 +16,7 @@ export const site = {
   phone: "+507 6000-0000",
   phoneHref: "tel:+50760000000",
   whatsapp: "50760000000", // solo dígitos, con código de país
-  email: "hola@istmopropiedades.com",
+  email: "hola@istmorealty.com",
   address: "Ciudad de Panamá, Panamá",
   hours: "Lun–Vie 9:00–18:00 · Sáb 9:00–13:00",
 

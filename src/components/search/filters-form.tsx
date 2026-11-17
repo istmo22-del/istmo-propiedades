@@ -8,6 +8,7 @@ import { AMENITY_GROUPS, BATHROOM_OPTIONS, BEDROOM_OPTIONS } from "@/lib/constan
 import { districtsOf, PANAMA_PROVINCES } from "@/lib/panama";
 import { PROPERTY_CATEGORIES, type PropertyFilters } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { CategorySelect } from "@/components/search/category-select";
 
 export function FiltersForm({
   filters,
@@ -24,6 +25,16 @@ export function FiltersForm({
   return (
     <form action="/propiedades" method="get" className="space-y-6">
       {filters.sort !== "recent" && <input type="hidden" name="sort" value={filters.sort} />}
+
+      <div>
+        <label htmlFor={`${idPrefix}-category`} className="label">
+          Categorías
+        </label>
+        <CategorySelect id={`${idPrefix}-category`} filters={filters} />
+        <p className="mt-1.5 text-[11.5px] text-muted/80">
+          Accesos rápidos a colecciones con filtros ya aplicados.
+        </p>
+      </div>
 
       <div>
         <label htmlFor={`${idPrefix}-q`} className="label">

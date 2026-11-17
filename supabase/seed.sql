@@ -1,5 +1,5 @@
 -- ============================================================================
---  ISTMO PROPIEDADES · Datos de ejemplo (opcional)
+--  ISTMO REALTY · Datos de ejemplo (opcional)
 --  Ejecutar DESPUÉS de schema.sql, en el SQL Editor de Supabase.
 --
 --  Son propiedades de demostración con fotos de Unsplash (licencia libre
@@ -206,5 +206,56 @@ values
   ],
   8.9900, -79.5050,
   'draft', false, now() - interval '1 day'
+),
+(
+  'apartamento-amueblado-en-boquete',
+  'Apartamento amueblado en Boquete',
+  E'Apartamento de dos habitaciones completamente amueblado, a pocos minutos del centro de Boquete. Sala con ventanales, cocina equipada y balcón con vista a las montañas.\n\nIncluye agua, mantenimiento, internet y un estacionamiento cubierto. El edificio tiene lavandería común y acceso controlado.\n\nDisponible para alquiler anual, ideal para parejas o profesionales que trabajan remoto.',
+  1200, 'USD',
+  'Chiriquí', 'Boquete', 'Centro de Boquete',
+  'Alquiler', 'Apartamentos',
+  2, 2, 1, 95,
+  array['Amueblado','Balcón','Aire acondicionado','Cocina equipada','Lavandería','Vista a la montaña'],
+  true,
+  array[
+    'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1600&q=75',
+    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1600&q=75'
+  ],
+  8.7800, -82.4400,
+  'published', false, now() - interval '3 days'
+),
+(
+  'casa-con-jardin-en-alquiler-en-david',
+  'Casa con jardín en alquiler en David',
+  E'Casa de una planta en residencial tranquilo de David, con jardín amplio y patio cubierto. Tres habitaciones con closets, dos baños y cocina con desayunador.\n\nSe alquila amueblada y con línea blanca. Tiene portón automático, estacionamiento para dos autos y espacio de lavandería independiente.\n\nCerca de supermercados, colegios y del centro de la ciudad.',
+  950, 'USD',
+  'Chiriquí', 'David', 'San Mateo',
+  'Alquiler', 'Casas',
+  3, 2, 2, 180,
+  array['Amueblado','Jardín','Patio','Aire acondicionado','Lavandería','Portón automático'],
+  true,
+  array[
+    'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&w=1600&q=75',
+    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=75'
+  ],
+  8.4400, -82.4500,
+  'published', false, now() - interval '4 days'
+),
+(
+  'casa-moderna-en-david',
+  'Casa moderna en David',
+  E'Casa de diseño contemporáneo en El Terronal, con doble altura en la sala y ventanales que conectan con la terraza. Cocina abierta con isla, tres habitaciones y tres baños.\n\nEl patio tiene jardín, área de parrilla y espacio para una piscina pequeña. Incluye portón automático, sistema de seguridad y dos estacionamientos.\n\nA minutos de la Interamericana y de los principales centros comerciales de David.',
+  320000, 'USD',
+  'Chiriquí', 'David', 'El Terronal',
+  'Venta', 'Casas',
+  3, 3, 2, 220,
+  array['Jardín','Terraza','Aire acondicionado','Cocina equipada','Sistema de seguridad','Portón automático'],
+  false,
+  array[
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=75',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=75'
+  ],
+  8.4500, -82.4200,
+  'published', false, now() - interval '5 days'
 )
 on conflict (slug) do nothing;

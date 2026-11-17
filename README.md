@@ -1,8 +1,8 @@
-# Istmo Propiedades
+# Istmo Realty
 
 Portal inmobiliario para Panamá construido con **Next.js (App Router)**, **Supabase** y **Cloudflare Workers**. Incluye un sitio público con buscador tradicional avanzado y un panel privado para que un único vendedor administre todo el portafolio.
 
-> **Modo demostración:** si aún no hay credenciales de Supabase, el sitio y el panel funcionan con 11 propiedades de ejemplo en modo solo lectura. Sirve para revisar el diseño y el flujo completo antes de conectar la base de datos.
+> **Modo demostración:** si aún no hay credenciales de Supabase, el sitio y el panel funcionan con 14 propiedades de ejemplo en modo solo lectura. Sirve para revisar el diseño y el flujo completo antes de conectar la base de datos.
 
 ---
 
@@ -30,6 +30,7 @@ Portal inmobiliario para Panamá construido con **Next.js (App Router)**, **Supa
 ### Sitio público
 
 - Portada con búsqueda rápida, propiedades destacadas, categorías y provincias.
+- Colecciones rápidas: **Alquileres en Chiriquí**, **Casas en venta en David** y **Propiedades recientes**, con enlaces a búsquedas filtradas.
 - Buscador `/propiedades` con filtros tradicionales combinables:
   - operación (venta/alquiler), tipo de propiedad, provincia, distrito y barrio;
   - rango de precio, habitaciones, baños, parqueos y área;
@@ -159,7 +160,7 @@ Reinicia `npm run dev`. La app deja el modo demostración automáticamente cuand
 
 ### 5. Datos de ejemplo (opcional)
 
-Puedes ejecutar [`supabase/seed.sql`](supabase/seed.sql) para cargar 11 propiedades de demostración con fotos de Unsplash.
+Puedes ejecutar [`supabase/seed.sql`](supabase/seed.sql) para cargar 14 propiedades de demostración con fotos de Unsplash.
 
 Esas filas se insertan con `seller_id = null`, así que **se ven en el sitio público pero no en el panel del vendedor**. Para administrarlas, asígnalas a tu usuario:
 
@@ -182,12 +183,13 @@ delete from public.properties where seller_id is null;
 1. Entra a `/admin/login` con el usuario creado en Supabase.
 2. En **Propiedades** verás el listado, los conteos por estado y el buscador.
 3. **Nueva propiedad** abre el formulario completo.
-4. **Guardar** publica los cambios de inmediato según el estado elegido:
+4. Completa título, operación, tipo, precio, ubicación, habitaciones y amenidades.
+5. En **Fotos**, sube hasta 10 imágenes JPG/PNG/WebP de máximo 5 MB cada una. La primera será la portada; puedes reordenarlas o cambiarla con **Hacer portada**.
+6. Elige el estado y guarda:
    - **Borrador:** solo visible en el panel.
    - **Publicada:** visible en el sitio, el buscador y el sitemap.
    - **Vendida / Alquilada:** se conserva el historial, pero no aparece como disponible.
-5. **Eliminar** pide confirmación y borra la fila y sus imágenes del Storage.
-6. La primera imagen es la portada. Puedes cambiarla con **Hacer portada**.
+7. **Eliminar** pide confirmación y borra la fila y sus imágenes del Storage.
 
 Consejos:
 
@@ -287,7 +289,7 @@ Desde la carpeta del proyecto:
 ```bash
 git init
 git add .
-git commit -m "Istmo Propiedades: sitio público y panel"
+git commit -m "Istmo Realty: sitio público y panel"
 git branch -M main
 git remote add origin https://github.com/TU-USUARIO/istmo-propiedades.git
 git push -u origin main
@@ -332,7 +334,7 @@ En **Settings → Variables & Secrets**, agrega las mismas tres variables para e
 
 - `NEXT_PUBLIC_SUPABASE_URL`: texto normal.
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: texto normal (es pública; no la marques como secreta).
-- `NEXT_PUBLIC_SITE_URL`: la URL final del sitio, por ejemplo `https://istmopropiedades.com`.
+- `NEXT_PUBLIC_SITE_URL`: la URL final del sitio, por ejemplo `https://istmorealty.com`.
 
 ### 5. Desplegar
 

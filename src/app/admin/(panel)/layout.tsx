@@ -25,7 +25,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const email = user?.email ?? "demo@istmo.local";
 
   return (
-    <div className="min-h-dvh bg-[#f4f1ea] lg:grid lg:grid-cols-[256px_1fr]">
+    <div className="min-h-dvh bg-sand lg:grid lg:grid-cols-[256px_1fr]">
       <AdminSidebar email={email} demo={demo} />
       <div className="flex min-w-0 flex-col">
         <AdminMobileBar demo={demo} />

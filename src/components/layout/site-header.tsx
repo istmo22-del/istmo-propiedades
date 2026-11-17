@@ -50,7 +50,7 @@ export function SiteHeader() {
           "fixed inset-x-0 top-0 z-50 transition-all duration-300",
           transparent
             ? "bg-transparent"
-            : "border-b border-line/70 bg-cream/95 shadow-[0_1px_0_rgba(16,33,31,0.03)] backdrop-blur-md",
+            : "border-b border-line/70 bg-cream/95 shadow-[0_1px_0_rgba(16,42,67,0.03)] backdrop-blur-md",
         )}
       >
         <div className="container-page flex h-20 items-center justify-between gap-6">

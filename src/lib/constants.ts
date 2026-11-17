@@ -1,6 +1,6 @@
 import type { PropertyStatus } from "@/lib/types";
 
-export const SITE_NAME = "Istmo Propiedades";
+export const SITE_NAME = "Istmo Realty";
 
 /** Cantidad de propiedades por página en el buscador. */
 export const PAGE_SIZE = 9;

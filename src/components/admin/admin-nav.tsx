@@ -5,21 +5,13 @@ import { usePathname } from "next/navigation";
 import { ExternalLink, LogOut, Plus, SquareStack } from "lucide-react";
 
 import { logoutAction } from "@/app/admin/login/actions";
+import { IstmoMark } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
 
 function AdminMark() {
   return (
-    <span className="grid size-9 place-items-center rounded-xl bg-white/10 ring-1 ring-white/15">
-      <svg viewBox="0 0 64 64" className="size-5" fill="none" aria-hidden="true">
-        <path
-          d="M15 34.5 32 20l17 14.5"
-          stroke="#C8A96A"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path d="M32 30.5V47" stroke="#F6F1E8" strokeWidth="3.5" strokeLinecap="round" />
-      </svg>
+    <span className="grid size-10 place-items-center rounded-xl bg-white ring-1 ring-white/20">
+      <IstmoMark className="size-7" />
     </span>
   );
 }
@@ -130,7 +122,7 @@ export function AdminMobileBar({ demo }: { email?: string; demo: boolean }) {
       <div className="flex items-center gap-2">
         <Link
           href="/admin/propiedades/nueva"
-          className="inline-flex h-9 items-center gap-1.5 rounded-full bg-gold px-3.5 text-[11.5px] font-bold text-[#1c1913]"
+          className="inline-flex h-9 items-center gap-1.5 rounded-full bg-gold px-3.5 text-[11.5px] font-bold text-ink"
         >
           <Plus className="size-3.5" aria-hidden="true" />
           Nueva

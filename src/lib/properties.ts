@@ -1,6 +1,11 @@
 import { cache } from "react";
 
 import { PAGE_SIZE } from "@/lib/constants";
+import {
+  PROPERTY_COLLECTIONS,
+  propertyMatchesCollection,
+  type CollectionKey,
+} from "@/lib/collections";
 import { DEMO_PROPERTIES } from "@/lib/demo-data";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
@@ -179,6 +184,7 @@ export type HomeData = {
   total: number;
   featured: Property[];
   latest: Property[];
+  collections: Record<CollectionKey, Property[]>;
   categories: { name: PropertyCategory; count: number }[];
   provinces: { name: string; count: number }[];
 };
@@ -186,6 +192,13 @@ export type HomeData = {
 function buildHomeData(items: Property[]): HomeData {
   const featured = items.filter((property) => property.is_featured).slice(0, 3);
   const latest = items.slice(0, 6);
+
+  const collections = Object.fromEntries(
+    PROPERTY_COLLECTIONS.map((collection) => [
+      collection.key,
+      items.filter((property) => propertyMatchesCollection(property, collection)).slice(0, 3),
+    ]),
+  ) as Record<CollectionKey, Property[]>;
 
   const categoryMap = new Map<PropertyCategory, number>();
   const provinceMap = new Map<string, number>();
@@ -198,6 +211,7 @@ function buildHomeData(items: Property[]): HomeData {
     total: items.length,
     featured: featured.length > 0 ? featured : latest.slice(0, 3),
     latest,
+    collections,
     categories: [...categoryMap.entries()]
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => b.count - a.count),
