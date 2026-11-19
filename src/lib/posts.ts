@@ -7,15 +7,20 @@ import type { Post, PostStatus } from "@/lib/types";
 
 const DEMO_MODE = !isSupabaseConfigured();
 
-function assertNoError(error: { message: string } | null, context: string): void {
-  if (error) {
-    console.error(`[supabase] ${context}:`, error.message);
-    throw new Error(`No pudimos cargar el blog (${context}). Intenta de nuevo.`);
-  }
-}
-
 function postDate(post: Post): number {
   return +new Date(post.published_at ?? post.created_at);
+}
+
+function logError(error: { message: string }, context: string): void {
+  console.error(`[supabase] ${context}:`, error.message);
+}
+
+/**
+ * El blog no debe tumbar el sitio si la tabla todavía no existe:
+ * se registra el error y la vista sigue funcionando sin artículos.
+ */
+function assertNoErrorSafe(error: { message: string } | null, context: string): void {
+  if (error) logError(error, context);
 }
 
 function sortByDate(items: Post[]): Post[] {
@@ -42,7 +47,7 @@ export async function getPublishedPosts(limit = 30): Promise<Post[]> {
     .order("published_at", { ascending: false, nullsFirst: false })
     .limit(limit);
 
-  assertNoError(error, "artículos");
+  assertNoErrorSafe(error, "artículos");
   return data ?? [];
 }
 
@@ -69,7 +74,7 @@ export const getPostBySlug = cache(async (slug: string): Promise<Post | null> =>
     .eq("status", "published")
     .maybeSingle();
 
-  assertNoError(error, "artículo");
+  assertNoErrorSafe(error, "artículo");
   return data ?? null;
 });
 
@@ -90,7 +95,7 @@ export async function getRelatedPosts(post: Post, limit = 3): Promise<Post[]> {
     .order("published_at", { ascending: false, nullsFirst: false })
     .limit(limit);
 
-  assertNoError(error, "artículos relacionados");
+  assertNoErrorSafe(error, "artículos relacionados");
   return data ?? [];
 }
 
@@ -110,7 +115,7 @@ export async function getAllPublishedPostSlugs(): Promise<
     .select("slug, updated_at")
     .eq("status", "published");
 
-  assertNoError(error, "sitemap del blog");
+  assertNoErrorSafe(error, "sitemap del blog");
   return data ?? [];
 }
 
@@ -133,7 +138,7 @@ export async function getAdminPosts(
   if (status) query = query.eq("status", status);
 
   const { data, error } = await query.order("updated_at", { ascending: false });
-  assertNoError(error, "panel del blog");
+  assertNoErrorSafe(error, "panel del blog");
   return data ?? [];
 }
 
@@ -150,6 +155,6 @@ export async function getPostForEdit(userId: string, id: string): Promise<Post |
     .eq("author_id", userId)
     .maybeSingle();
 
-  assertNoError(error, "editar artículo");
+  assertNoErrorSafe(error, "editar artículo");
   return data ?? null;
 }
