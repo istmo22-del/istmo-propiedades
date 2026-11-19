@@ -2,121 +2,99 @@ import type { Post } from "@/lib/types";
 
 /**
  * Artículos de ejemplo para el modo demostración (sin Supabase).
- * Al configurar Supabase se usan los artículos reales de la tabla posts.
+ * Al configurar Supabase se usan los artículos reales de la tabla posts
+ * (supabase/blog-posts.sql carga estos mismos tres).
  */
 export const DEMO_POSTS: Post[] = [
   {
-    id: "demo-post-extranjeros",
-    slug: "comprar-casa-en-panama-extranjeros",
-    title: "Comprar casa en Panamá siendo extranjero: lo que realmente importa",
+    id: "demo-post-errores",
+    slug: "3-errores-al-comprar-propiedad-en-panama",
+    title:
+      "3 errores silenciosos al comprar una propiedad en Panamá (y cómo evitarlos antes de firmar)",
     excerpt:
-      "Qué puede comprar un extranjero, qué documentos pide el Registro Público y los tres errores que cuestan dinero.",
-    content: `Panamá es uno de los países de la región donde un extranjero puede comprar propiedad con título pleno, sin necesidad de residencia ni de socios locales. La condición es simple: la propiedad debe estar titulada y libre de gravámenes.
+      "Gravámenes ocultos, uso de suelo y gastos de cierre: los tres puntos que arruinan compras en Panamá y cómo revisarlos antes de pagar el abono.",
+    content: `Comprar una casa, un apartamento o un terreno en Panamá puede ser la mejor inversión de tu vida o un problema legal de años. Muchos compradores se enamoran de la vista o del precio y pasan por alto detalles que se revisan antes de firmar. Si estás pensando invertir este año, revisa estas tres trampas.
 
-## Qué puedes comprar
+## 1. Confiar en la promesa sin revisar el Registro Público
 
-- Casas, apartamentos y terrenos con título en el Registro Público.
-- Fincas y propiedades de playa tituladas.
-- Propiedades en zonas francas y proyectos con régimen especial.
+Que alguien te muestre una escritura no significa que la propiedad esté libre de gravámenes, hipotecas o anotaciones judiciales. Exige un certificado del Registro Público actualizado, idealmente el mismo día de la negociación, y un estudio de título hecho por un abogado independiente.
 
-Hay excepciones que conviene revisar con un abogado: tierras dentro de ciertos límites fronterizos, territorios indígenas y propiedades sin título (derechos posesorios). En esos casos el proceso es distinto y el riesgo, mayor.
+## 2. No verificar el uso de suelo
 
-## Los documentos que te van a pedir
+Comprar un lote en una zona de crecimiento pensando en un local comercial o en alquiler turístico, y descubrir después que la zonificación es solo residencial, detiene el proyecto en seco. Antes del abono pide el certificado de uso de suelo y el plano aprobado en la municipalidad correspondiente.
 
-1. Pasaporte vigente.
-2. Poder notarial si no estarás presente en la firma.
-3. Estudio de título actualizado de la finca.
-4. Paz y salvo municipal del inmueble.
+## 3. Subestimar los gastos de cierre
 
-## Los tres errores caros
+Además del precio acordado existen el impuesto de transferencia (2%), el impuesto de ganancia de capital (3%), los gastos notariales y los honorarios legales. Si ese flujo no está calculado desde el primer día, el cierre financiero se cae a mitad de camino.
 
-1. **Comprar sin estudio de título.** Una finca puede tener hipotecas, servidumbres o herederos con derechos. El estudio cuesta poco comparado con el problema.
-2. **Confiar en el área del anuncio.** Verifica que los metros coincidan con el catastro y con el plano.
-3. **Pagar sin contrato escrito.** La promesa de compraventa debe detallar precio, plazos, penalidades y quién paga cada gasto de cierre.
+## El consejo que importa
 
-Un abogado local revisa el título y redacta la escritura en español; el Registro Público inscribe la compra y desde ese momento eres el propietario. Si quieres, te acompañamos en el proceso con propiedades verificadas.`,
-    cover_image: "/hero.jpg",
-    status: "published",
-    published_at: "2026-11-12T14:00:00Z",
-    author_id: null,
-    created_at: "2026-11-12T14:00:00Z",
-    updated_at: "2026-11-12T14:00:00Z",
-  },
-  {
-    id: "demo-post-boquete-coronado",
-    slug: "boquete-o-coronado-donde-invertir",
-    title: "Boquete o Coronado: dónde conviene invertir según tu plan",
-    excerpt:
-      "Montaña fresca o playa a una hora de la capital. Comparamos clima, precios, alquileres y estilo de vida.",
-    content: `Son los dos mercados favoritos de quien busca salir de la ciudad, y no compiten entre sí: responden a estilos de vida distintos.
-
-## Clima y entorno
-
-Boquete está en las tierras altas de Chiriquí, a unos 1.200 metros. Mañanas frescas, tardes de lluvia en temporada verde y una comunidad de expatriados consolidada. Coronado, en la costa de Panamá Oeste, es calor de playa, brisa y acceso rápido por la Interamericana.
-
-## Precios y oferta
-
-En Boquete encuentras desde casas de campo hasta fincas productivas; la oferta es amplia y los precios varían mucho según la vista y el acceso. En Coronado dominan casas de playa, condominios con amenidades y terrenos cerca de la costa. La cercanía a la capital sostiene la demanda de alquiler durante todo el año.
-
-## Alquileres
-
-Boquete tiene demanda de alquiler amueblado por temporadas y por residentes extranjeros. Coronado tiene un mercado de alquiler más estable, con familias que trabajan en la capital y buscan casa de playa para fines de semana.
-
-## Cuál elegir
-
-- Si buscas clima fresco, comunidad de montaña y posibilidad de finca: **Boquete**.
-- Si buscas playa, acceso a la ciudad y reventa más líquida: **Coronado**.
-
-Lo que decide la inversión no es la zona, sino la propiedad: acceso, título limpio y servicios. Esa parte la revisamos nosotros.`,
-    cover_image: "/about.jpg",
-    status: "published",
-    published_at: "2026-11-06T14:00:00Z",
-    author_id: null,
-    created_at: "2026-11-06T14:00:00Z",
-    updated_at: "2026-11-06T14:00:00Z",
-  },
-  {
-    id: "demo-post-promesa",
-    slug: "revisar-antes-de-firmar-promesa-compraventa",
-    title: "Qué revisar antes de firmar una promesa de compraventa",
-    excerpt:
-      "Una lista concreta para no heredar deudas, sorpresas de área ni gastos que no esperabas.",
-    content: `La promesa de compraventa es el documento que más dinero mueve en una compra de propiedad, y el que más se firma sin leer con calma. Esta es la lista que usamos antes de recomendarte firmar.
-
-## 1. Estudio de título
-
-Pide el certificado del Registro Público y verifica: propietario actual, hipotecas, servidumbres y anotaciones. Un título con gravamen se negocia, no se ignora.
-
-## 2. Área y linderos
-
-Compara los metros del anuncio con el plano y con el catastro. Diferencias de área son comunes y afectan el precio.
-
-## 3. Deudas del inmueble
-
-Paz y salvo municipal de impuestos y de la administración del edificio. Si hay cuotas atrasadas, deben quedar saldadas antes del cierre.
-
-## 4. Quién paga qué
-
-La promesa debe decir con claridad: impuesto de transferencia, gastos notariales, registro y comisión. Sin eso, el cierre termina costando más de lo previsto.
-
-## 5. Plazos y penalidades
-
-Fecha límite para el cierre, qué pasa si el comprador se atrasa, qué pasa si el vendedor se arrepiente. Las penalidades protegen a ambas partes.
-
-## 6. Entrega y estado del inmueble
-
-Qué se queda con la casa: muebles, electrodomésticos, equipos. Haz un inventario firmado y fotos del estado en la entrega.
-
-## 7. Salida del vendedor
-
-Fecha de entrega de llaves y desocupación. Coordínala por escrito para evitar un cierre sin casa disponible.
-
-Si estás por firmar una promesa, envíanosla y la revisamos contigo antes de que pongas tu firma.`,
+Una asesoría inmobiliaria seria antes del primer abono cuesta una fracción de lo que cuesta resolver un problema legal después.`,
     cover_image: null,
     status: "published",
-    published_at: "2026-10-29T14:00:00Z",
+    published_at: "2026-11-19T12:00:00Z",
     author_id: null,
-    created_at: "2026-10-29T14:00:00Z",
-    updated_at: "2026-10-29T14:00:00Z",
+    created_at: "2026-11-19T12:00:00Z",
+    updated_at: "2026-11-19T12:00:00Z",
+  },
+  {
+    id: "demo-post-extranjeros",
+    slug: "extranjeros-jubilados-chiriqui-y-playas-de-panama",
+    title:
+      "¿Por qué cada vez más extranjeros están mudando su retiro (y su capital) a Chiriquí y las playas de Panamá?",
+    excerpt:
+      "Boquete, Volcán y la costa del Pacífico concentran la demanda de jubilados y compradores internacionales. Clima, visas y retorno por alquiler.",
+    content: `Mientras el costo de vida en Norteamérica y Europa sigue subiendo, Panamá se mantiene entre los destinos favoritos de quienes buscan calidad de vida, seguridad jurídica y una economía dolarizada. El interés ya no se concentra solo en la Ciudad de Panamá.
+
+Hoy los compradores internacionales miran con fuerza el interior del país, sobre todo Boquete, Volcán y la costa del Pacífico. Estas son las tres razones.
+
+## Microclimas y estilo de vida
+
+Vivir en la montaña con clima primaveral todo el año, o a 15 minutos de la playa, con fibra óptica, hospitales privados y aeropuertos cerca, es una combinación difícil de igualar en la región.
+
+## Beneficios fiscales y migratorios
+
+Programas como la Visa de Pensionado y la Visa de Inversionista Calificado ofrecen incentivos que protegen el patrimonio y facilitan la residencia permanente. Conviene revisar los requisitos vigentes con un abogado migratorio antes de iniciar el trámite.
+
+## Plusvalía y retorno por alquiler
+
+Las propiedades bien ubicadas en zonas turísticas o de retiro mantienen demanda de alquileres a mediano y largo plazo, y generan ingresos en dólares.
+
+Para vivir o para diversificar portafolio, el mercado inmobiliario fuera de la capital vive uno de sus momentos más dinámicos.`,
+    cover_image: null,
+    status: "published",
+    published_at: "2026-11-19T11:50:00Z",
+    author_id: null,
+    created_at: "2026-11-19T11:50:00Z",
+    updated_at: "2026-11-19T11:50:00Z",
+  },
+  {
+    id: "demo-post-vender",
+    slug: "por-que-tu-propiedad-no-se-vende-en-panama",
+    title:
+      "¿Tu propiedad lleva meses en venta y nadie hace una oferta? Esta es la verdadera razón",
+    excerpt:
+      "Precio fuera de mercado, fotos que no venden y papeles incompletos: por qué una propiedad lleva meses publicada sin ofertas.",
+    content: `En el mercado actual de Panamá las propiedades bien posicionadas se mueven rápido, mientras otras pasan más de un año publicadas sin recibir una oferta seria. Cuando eso pasa, casi siempre es por una combinación de tres factores.
+
+## Precio basado en emociones, no en mercado
+
+Ponerle precio a tu casa según lo que costó remodelarla o lo que necesitas recibir no funciona si el avalúo y las ventas recientes de la zona dicen otra cosa. Un precio inflado desde el inicio solo ayuda a vender las propiedades de tus vecinos.
+
+## Presentación digital deficiente
+
+La primera visita ocurre en el teléfono. Fotos oscuras, desordenadas o tomadas con prisa hacen que el comprador descarte la propiedad en segundos.
+
+## Falta de documentación lista
+
+Cuando aparece un comprador con financiamiento aprobado o pago de contado, no tener paz y salvos al día (IDAAN, mantenimiento, inmueble) ni planos actualizados puede enfriar el trato y mandar al cliente a otra opción.
+
+Vender al mejor precio posible requiere estrategia, datos reales de mercado y exposición frente al comprador correcto. No se trata solo de colgar un letrero.`,
+    cover_image: null,
+    status: "published",
+    published_at: "2026-11-19T11:40:00Z",
+    author_id: null,
+    created_at: "2026-11-19T11:40:00Z",
+    updated_at: "2026-11-19T11:40:00Z",
   },
 ];

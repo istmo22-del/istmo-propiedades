@@ -164,6 +164,8 @@ Reinicia `npm run dev`. La app deja el modo demostración automáticamente cuand
 
 Puedes ejecutar [`supabase/seed.sql`](supabase/seed.sql) para cargar 14 propiedades de demostración con fotos de Unsplash.
 
+Para el blog, ejecuta [`supabase/blog-posts.sql`](supabase/blog-posts.sql): carga tres artículos publicados, ya asignados a tu usuario si existe. Es idempotente, así que puedes volver a ejecutarlo para actualizar el texto sin duplicar filas.
+
 Esas filas se insertan con `seller_id = null`, así que **se ven en el sitio público pero no en el panel del vendedor**. Para administrarlas, asígnalas a tu usuario:
 
 ```sql
@@ -203,6 +205,8 @@ Consejos:
 ---
 
 ## Usar el blog
+
+La primera vez necesitas dos pasos en Supabase: ejecutar `supabase/schema.sql` (tabla, políticas RLS y bucket `blog-images`) y `supabase/blog-posts.sql` (tres artículos de ejemplo ya publicados).
 
 1. Entra a **Blog** en el panel (`/admin/blog`).
 2. **Nuevo artículo** abre el editor.
