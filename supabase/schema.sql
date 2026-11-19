@@ -250,11 +250,149 @@ create policy "Sellers can delete their property images"
     and (storage.foldername(name))[1] = (select auth.uid())::text
   );
 
+-- ----------------------------------------------------------------------------
+-- 7. Blog
+--    - Público lee solo artículos publicados.
+--    - El autor solo crea/edita/borra SUS artículos (mismo patrón que properties).
+-- ----------------------------------------------------------------------------
+do $$ begin
+  create type public.post_status as enum ('draft', 'published');
+exception when duplicate_object then null; end $$;
+
+create table if not exists public.posts (
+  id uuid primary key default gen_random_uuid(),
+  slug text not null unique,
+  title text not null,
+  excerpt text,
+  content text not null,
+  cover_image text,
+  status public.post_status not null default 'draft',
+  published_at timestamptz,
+  author_id uuid references auth.users (id) on delete set null default auth.uid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+
+  constraint posts_title_length check (char_length(title) between 3 and 160),
+  constraint posts_slug_format check (slug ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$')
+);
+
+create index if not exists posts_published_idx
+  on public.posts (status, published_at desc);
+
+create index if not exists posts_author_idx
+  on public.posts (author_id, updated_at desc);
+
+drop trigger if exists posts_set_updated_at on public.posts;
+create trigger posts_set_updated_at
+  before update on public.posts
+  for each row execute function public.set_updated_at();
+
+alter table public.posts enable row level security;
+
+drop policy if exists "Published posts are public" on public.posts;
+drop policy if exists "Authors can read their own posts" on public.posts;
+drop policy if exists "Authors can insert their own posts" on public.posts;
+drop policy if exists "Authors can update their own posts" on public.posts;
+drop policy if exists "Authors can delete their own posts" on public.posts;
+
+create policy "Published posts are public"
+  on public.posts
+  for select
+  to anon, authenticated
+  using (status = 'published');
+
+create policy "Authors can read their own posts"
+  on public.posts
+  for select
+  to authenticated
+  using ((select auth.uid()) = author_id);
+
+create policy "Authors can insert their own posts"
+  on public.posts
+  for insert
+  to authenticated
+  with check ((select auth.uid()) = author_id);
+
+create policy "Authors can update their own posts"
+  on public.posts
+  for update
+  to authenticated
+  using ((select auth.uid()) = author_id)
+  with check ((select auth.uid()) = author_id);
+
+create policy "Authors can delete their own posts"
+  on public.posts
+  for delete
+  to authenticated
+  using ((select auth.uid()) = author_id);
+
+grant select on public.posts to anon;
+grant select, insert, update, delete on public.posts to authenticated;
+
+-- Storage: portadas del blog (misma estructura que property-images).
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'blog-images',
+  'blog-images',
+  true,
+  5242880, -- 5 MB
+  array['image/jpeg', 'image/png', 'image/webp', 'image/avif']
+)
+on conflict (id) do update
+  set public = excluded.public,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "Blog images are publicly readable" on storage.objects;
+drop policy if exists "Authors can upload blog images" on storage.objects;
+drop policy if exists "Authors can update their blog images" on storage.objects;
+drop policy if exists "Authors can delete their blog images" on storage.objects;
+
+create policy "Blog images are publicly readable"
+  on storage.objects
+  for select
+  to anon, authenticated
+  using (bucket_id = 'blog-images');
+
+create policy "Authors can upload blog images"
+  on storage.objects
+  for insert
+  to authenticated
+  with check (
+    bucket_id = 'blog-images'
+    and (storage.foldername(name))[1] = (select auth.uid())::text
+  );
+
+create policy "Authors can update their blog images"
+  on storage.objects
+  for update
+  to authenticated
+  using (
+    bucket_id = 'blog-images'
+    and (storage.foldername(name))[1] = (select auth.uid())::text
+  )
+  with check (
+    bucket_id = 'blog-images'
+    and (storage.foldername(name))[1] = (select auth.uid())::text
+  );
+
+create policy "Authors can delete their blog images"
+  on storage.objects
+  for delete
+  to authenticated
+  using (
+    bucket_id = 'blog-images'
+    and (storage.foldername(name))[1] = (select auth.uid())::text
+  );
+
 -- ============================================================================
 --  SIGUIENTE PASO (manual, en el dashboard de Supabase):
 --  1. Authentication → Settings: desactiva "Allow new users to sign up"
 --     (el registro público). El portal tiene UN solo vendedor.
 --  2. Authentication → Users → Add user: crea el usuario del vendedor
 --     (email + contraseña) y confírmalo.
---  3. Ejecuta supabase/seed.sql (opcional) para cargar propiedades de ejemplo.
+--  3. Ejecuta supabase/seed.sql (opcional) para cargar datos de ejemplo.
+--  4. Si cargaste artículos del seed (sin autor), asígnalos a tu usuario:
+--     update public.posts set author_id = (select id from auth.users limit 1)
+--     where author_id is null;
 -- ============================================================================

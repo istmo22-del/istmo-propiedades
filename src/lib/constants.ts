@@ -1,4 +1,4 @@
-import type { PropertyStatus } from "@/lib/types";
+import type { PostStatus, PropertyStatus } from "@/lib/types";
 
 export const SITE_NAME = "Istmo Realty";
 
@@ -12,6 +12,22 @@ export const MAX_IMAGES = 10;
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+
+export const POST_STATUS_META: Record<
+  PostStatus,
+  { label: string; description: string; className: string }
+> = {
+  published: {
+    label: "Publicado",
+    description: "Visible en el blog público.",
+    className: "bg-emerald-50 text-emerald-800 ring-emerald-600/20",
+  },
+  draft: {
+    label: "Borrador",
+    description: "Solo visible para ti.",
+    className: "bg-amber-50 text-amber-800 ring-amber-600/20",
+  },
+};
 
 export const STATUS_META: Record<
   PropertyStatus,

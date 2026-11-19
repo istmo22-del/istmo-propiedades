@@ -89,3 +89,34 @@ export type ActionState = {
   fieldErrors?: Record<string, string[]>;
   success?: string;
 } | null;
+
+// ---------------------------------------------------------------------------
+// Blog
+// ---------------------------------------------------------------------------
+
+export const POST_STATUSES = ["draft", "published"] as const;
+export type PostStatus = (typeof POST_STATUSES)[number];
+
+export type Post = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  content: string;
+  cover_image: string | null;
+  status: PostStatus;
+  published_at: string | null;
+  author_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type PostInsert = Omit<Post, "id" | "created_at" | "updated_at"> & {
+  id?: string;
+};
+
+export type PostUpdate = Partial<Post>;
+
+export type PostFilters = {
+  status?: PostStatus;
+};

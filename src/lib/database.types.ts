@@ -1,4 +1,8 @@
 import type {
+  Post,
+  PostInsert,
+  PostStatus,
+  PostUpdate,
   Property,
   PropertyCategory,
   PropertyInsert,
@@ -20,6 +24,12 @@ export type Database = {
         Update: PropertyUpdate;
         Relationships: [];
       };
+      posts: {
+        Row: Post;
+        Insert: PostInsert;
+        Update: PostUpdate;
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: { [_ in never]: never };
@@ -27,6 +37,7 @@ export type Database = {
       transaction_type: TransactionType;
       property_category: PropertyCategory;
       property_status: PropertyStatus;
+      post_status: PostStatus;
     };
     CompositeTypes: { [_ in never]: never };
   };

@@ -42,6 +42,7 @@ export const siteNav = [
   { href: "/propiedades?transaction=Venta", label: "Comprar" },
   { href: "/propiedades?transaction=Alquiler", label: "Alquilar" },
   { href: "/propiedades", label: "Propiedades" },
+  { href: "/blog", label: "Blog" },
   { href: "/nosotros", label: "Nosotros" },
   { href: "/contacto", label: "Contacto" },
 ] as const;

@@ -37,6 +37,7 @@ Portal inmobiliario para Panamá construido con **Next.js (App Router)**, **Supa
   - amenidades (selección múltiple) y amueblado;
   - orden por recientes, precio o área; paginación y chips de filtros activos.
 - Ficha de propiedad con galería, detalles, amenidades, mapa, propiedades similares, botón de compartir y JSON-LD para SEO.
+- Blog público `/blog`: artículos en Markdown, portada con imagen, tiempo de lectura, artículos relacionados, RSS (`/blog/rss.xml`) y JSON-LD `BlogPosting`.
 - WhatsApp, formulario de contacto, páginas de nosotros y privacidad.
 - SEO técnico: metadatos, sitemap, robots, manifest, Open Graph y datos estructurados.
 - Diseño responsive con Tailwind CSS v4 y componentes accesibles.
@@ -50,7 +51,8 @@ Portal inmobiliario para Panamá construido con **Next.js (App Router)**, **Supa
 - Hasta 10 imágenes por propiedad (5 MB cada una), con portada, reordenamiento y borrado.
 - Slug automático y estable para URLs limpias.
 - Al eliminar una propiedad también se eliminan sus imágenes del Storage.
-- RLS: el público solo lee propiedades publicadas; el vendedor solo puede modificar sus propias filas.
+- Blog: crear, editar, publicar y despublicar artículos con editor Markdown, vista previa y portada opcional.
+- RLS: el público solo lee propiedades y artículos publicados; el vendedor solo puede modificar sus propias filas.
 
 ---
 
@@ -200,6 +202,36 @@ Consejos:
 
 ---
 
+## Usar el blog
+
+1. Entra a **Blog** en el panel (`/admin/blog`).
+2. **Nuevo artículo** abre el editor.
+3. Escribe el título: el enlace (`/blog/...`) se genera solo y puedes ajustarlo.
+4. El **extracto** (máx. 300 caracteres) aparece en el listado y en Google.
+5. El contenido va en **Markdown** con pestaña de **Vista previa**:
+
+   ```markdown
+   ## Un subtítulo
+   Un párrafo normal con **negrita** y un [enlace](https://ejemplo.com).
+
+   - Punto uno
+   - Punto dos
+
+   > Una cita o aviso destacado.
+   ```
+
+6. La **portada** es opcional (JPG/PNG/WebP/AVIF, máx. 5 MB). Si no subes una, el artículo usa una portada con la marca.
+7. **Guardar borrador** deja el artículo solo en el panel. **Publicar** lo hace visible en el sitio, el sitemap y el RSS.
+
+Detalles:
+
+- El tiempo de lectura se calcula solo (200 palabras por minuto).
+- Los borradores no son accesibles públicamente gracias a RLS.
+- El artículo termina con un bloque de contacto y tres artículos relacionados automáticos.
+- Si cargaste los artículos del seed (sin autor), asígnalos a tu usuario con el SQL que está al final de `schema.sql`.
+
+---
+
 ## Variables de entorno
 
 | Variable | Obligatoria | Descripción |
@@ -222,6 +254,7 @@ istmo-propiedades/
 │   │   ├── (site)/             # Sitio público
 │   │   │   ├── page.tsx        # Portada
 │   │   │   ├── propiedades/    # Listado y ficha [slug]
+│   │   │   ├── blog/           # Listado y artículo [slug]
 │   │   │   ├── nosotros/
 │   │   │   ├── contacto/
 │   │   │   └── privacidad/
@@ -229,6 +262,7 @@ istmo-propiedades/
 │   │   │   ├── login/          # Acceso y server actions de auth
 │   │   │   └── (panel)/        # Panel protegido
 │   │   │       ├── page.tsx    # Listado de propiedades
+│   │   │       ├── blog/       # Listado, editor y actions del blog
 │   │   │       └── propiedades/
 │   │   │           ├── nueva/
 │   │   │           ├── [id]/
@@ -240,6 +274,7 @@ istmo-propiedades/
 │   │   └── manifest.ts
 │   ├── components/
 │   │   ├── admin/              # Formulario, imágenes, navegación
+│   │   ├── blog/               # Tarjeta y render de Markdown
 │   │   ├── layout/             # Header, footer, WhatsApp
 │   │   ├── properties/         # Tarjeta, galería, mapa
 │   │   ├── search/             # Filtros, orden, paginación
@@ -248,9 +283,11 @@ istmo-propiedades/
 │   ├── proxy.ts                # Refresco de sesión de Supabase en /admin
 │   └── lib/
 │       ├── properties.ts       # Consultas públicas y del panel
+│       ├── posts.ts            # Consultas del blog
 │       ├── validation.ts       # Esquema Zod del formulario
 │       ├── filters.ts          # Parseo de filtros desde la URL
 │       ├── demo-data.ts        # Datos del modo demostración
+│       ├── demo-posts.ts       # Artículos del modo demostración
 │       ├── supabase/           # Clientes de Supabase
 │       └── types.ts            # Tipos de dominio
 ├── supabase/
@@ -279,6 +316,8 @@ istmo-propiedades/
 ---
 
 ## Desplegar en Cloudflare (GitHub → Workers)
+
+> **Nota:** el proyecto puede publicarse en Vercel (conexión directa a GitHub, sin pasos extra). Los pasos de Cloudflare de esta sección son una alternativa para usar el plan gratuito de Workers.
 
 El despliegue recomendado es con **Workers Builds**: conectas el repositorio y Cloudflare reconstruye y publica en cada push a la rama de producción.
 

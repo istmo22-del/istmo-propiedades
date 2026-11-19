@@ -2,7 +2,12 @@ import { z } from "zod";
 
 import { MAX_IMAGES } from "@/lib/constants";
 import { isValidProvince } from "@/lib/panama";
-import { PROPERTY_CATEGORIES, PROPERTY_STATUSES, TRANSACTION_TYPES } from "@/lib/types";
+import {
+  POST_STATUSES,
+  PROPERTY_CATEGORIES,
+  PROPERTY_STATUSES,
+  TRANSACTION_TYPES,
+} from "@/lib/types";
 
 const optionalInt = (min: number, max: number, message: string) =>
   z.preprocess(
@@ -97,4 +102,51 @@ export function parseExistingImages(formData: FormData): string[] {
   } catch {
     return [];
   }
+}
+
+// ---------------------------------------------------------------------------
+// Blog
+// ---------------------------------------------------------------------------
+
+export const postFieldsSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(5, "El título debe tener al menos 5 caracteres.")
+    .max(160, "El título no puede superar 160 caracteres."),
+  slug: z
+    .string()
+    .trim()
+    .max(180, "El enlace es demasiado largo.")
+    .optional()
+    .transform((value) => value ?? "")
+    .refine((value) => value === "" || /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value), {
+      message: "El enlace solo admite minúsculas, números y guiones.",
+    }),
+  excerpt: z
+    .string()
+    .trim()
+    .max(300, "El extracto no puede superar 300 caracteres.")
+    .optional()
+    .transform((value) => value || null),
+  content: z
+    .string()
+    .trim()
+    .min(50, "El artículo es demasiado corto.")
+    .max(60_000, "El artículo es demasiado largo."),
+  status: z.enum(POST_STATUSES, { message: "Selecciona borrador o publicado." }),
+});
+
+export type PostFields = z.infer<typeof postFieldsSchema>;
+
+export function parsePostForm(formData: FormData) {
+  const raw = {
+    title: String(formData.get("title") ?? ""),
+    slug: String(formData.get("slug") ?? ""),
+    excerpt: String(formData.get("excerpt") ?? ""),
+    content: String(formData.get("content") ?? ""),
+    status: String(formData.get("status") ?? "draft"),
+  };
+
+  return postFieldsSchema.safeParse(raw);
 }

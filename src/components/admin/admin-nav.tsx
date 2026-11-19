@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ExternalLink, LogOut, Plus, SquareStack } from "lucide-react";
+import { ExternalLink, LogOut, PenLine, Plus, SquareStack } from "lucide-react";
 
 import { logoutAction } from "@/app/admin/login/actions";
 import { IstmoMark } from "@/components/ui/logo";
@@ -23,6 +23,7 @@ function useActive() {
       pathname === "/admin" ||
       (pathname.startsWith("/admin/propiedades/") && pathname !== "/admin/propiedades/nueva"),
     create: pathname === "/admin/propiedades/nueva",
+    blog: pathname.startsWith("/admin/blog"),
   };
 }
 
@@ -53,6 +54,18 @@ export function AdminSidebar({ email, demo }: { email: string; demo: boolean }) 
         >
           <SquareStack className="size-4" aria-hidden="true" />
           Propiedades
+        </Link>
+        <Link
+          href="/admin/blog"
+          className={cn(
+            "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-colors",
+            active.blog
+              ? "bg-white/10 text-cream ring-1 ring-white/10"
+              : "text-cream/60 hover:bg-white/[0.06] hover:text-cream",
+          )}
+        >
+          <PenLine className="size-4" aria-hidden="true" />
+          Blog
         </Link>
         <Link
           href="/admin/propiedades/nueva"
@@ -120,6 +133,13 @@ export function AdminMobileBar({ demo }: { email?: string; demo: boolean }) {
       </Link>
 
       <div className="flex items-center gap-2">
+        <Link
+          href="/admin/blog"
+          aria-label="Blog"
+          className="grid size-9 place-items-center rounded-full bg-white/10 text-cream/80 transition-colors hover:bg-white/15"
+        >
+          <PenLine className="size-4" aria-hidden="true" />
+        </Link>
         <Link
           href="/admin/propiedades/nueva"
           className="inline-flex h-9 items-center gap-1.5 rounded-full bg-gold px-3.5 text-[11.5px] font-bold text-ink"
