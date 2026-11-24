@@ -5,6 +5,17 @@
 --  Es seguro ejecutarlo más de una vez (no duplica artículos).
 -- ============================================================================
 
+-- Función de updated_at (si ya existe, se reemplaza sin problema).
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
 -- ----------------------------------------------------------------------------
 -- 7. Blog
 --    - Público lee solo artículos publicados.
