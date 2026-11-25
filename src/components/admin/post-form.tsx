@@ -1,15 +1,22 @@
 "use client";
 
-import { useActionState, useState, type ChangeEvent, type MouseEvent, type ReactNode } from "react";
+import {
+  useActionState,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import Link from "next/link";
 import {
   AlertCircle,
   Clock,
+  Code2,
   Eye,
   ExternalLink,
   ImagePlus,
   Loader2,
-  PenLine,
   Save,
   Trash2,
 } from "lucide-react";
@@ -21,7 +28,8 @@ import {
 import { ACCEPTED_IMAGE_TYPES, POST_STATUS_META } from "@/lib/constants";
 import type { Post } from "@/lib/types";
 import { cn, slugify } from "@/lib/utils";
-import { MarkdownContent } from "@/components/blog/markdown-content";
+import { MarkdownToolbar } from "@/components/admin/markdown-toolbar";
+import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { buttonClasses } from "@/components/ui/button";
 
 function Field({
@@ -86,7 +94,8 @@ export function PostForm({
   const [slugEdited, setSlugEdited] = useState(Boolean(post?.slug));
   const [excerpt, setExcerpt] = useState(post?.excerpt ?? "");
   const [content, setContent] = useState(post?.content ?? "");
-  const [tab, setTab] = useState<"write" | "preview">("write");
+  const contentRef = useRef<HTMLTextAreaElement>(null);
+  const [tab, setTab] = useState<"visual" | "markdown">("visual");
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
   const existingCover = post?.cover_image ?? "";
@@ -229,59 +238,60 @@ export function PostForm({
               <div className="flex items-center rounded-full border border-line bg-sand p-0.5">
                 <button
                   type="button"
-                  onClick={() => setTab("write")}
+                  onClick={() => setTab("visual")}
                   className={cn(
                     "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11.5px] font-semibold transition-colors",
-                    tab === "write" ? "bg-white text-ink shadow-sm" : "text-muted",
-                  )}
-                >
-                  <PenLine className="size-3.5" aria-hidden="true" />
-                  Escribir
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTab("preview")}
-                  className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11.5px] font-semibold transition-colors",
-                    tab === "preview" ? "bg-white text-ink shadow-sm" : "text-muted",
+                    tab === "visual" ? "bg-white text-ink shadow-sm" : "text-muted",
                   )}
                 >
                   <Eye className="size-3.5" aria-hidden="true" />
-                  Vista previa
+                  Visual
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTab("markdown")}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11.5px] font-semibold transition-colors",
+                    tab === "markdown" ? "bg-white text-ink shadow-sm" : "text-muted",
+                  )}
+                >
+                  <Code2 className="size-3.5" aria-hidden="true" />
+                  Markdown
                 </button>
               </div>
             </div>
 
-            {tab === "write" ? (
-              <textarea
-                id="content"
-                name="content"
-                required
-                rows={18}
-                value={content}
-                onChange={(event) => setContent(event.target.value)}
-                className="field-textarea min-h-96 font-mono text-[13px] leading-6"
-                placeholder={"Escribe en Markdown.\n\n## Un subtítulo\n\nUn párrafo normal, con **negrita** y enlaces.\n\n- Punto uno\n- Punto dos"}
+            <input type="hidden" name="content" value={content} />
+
+            {tab === "visual" ? (
+              <RichTextEditor
+                key={post?.id ?? "nuevo"}
+                initialContent={content}
+                onChange={setContent}
               />
             ) : (
               <>
-                <input type="hidden" name="content" value={content} />
-                <div className="min-h-96 rounded-xl border border-line bg-white px-4 py-4">
-                  {content.trim() ? (
-                    <MarkdownContent content={content} />
-                  ) : (
-                    <p className="text-[13px] text-muted">
-                      Aún no hay contenido. Vuelve a la pestaña Escribir para redactar.
-                    </p>
-                  )}
-                </div>
+                <MarkdownToolbar
+                  textareaRef={contentRef}
+                  value={content}
+                  onChange={setContent}
+                />
+                <textarea
+                  ref={contentRef}
+                  id="content"
+                  rows={18}
+                  value={content}
+                  onChange={(event) => setContent(event.target.value)}
+                  className="field-textarea min-h-96 font-mono text-[13px] leading-6"
+                  placeholder={"Escribe en Markdown.\n\n## Un subtítulo\n\nUn párrafo normal, con **negrita** y enlaces.\n\n- Punto uno\n- Punto dos"}
+                />
               </>
             )}
 
             <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
               <ContentStats content={content} />
               <p className="text-[11px] text-muted">
-                Markdown: ## para subtítulos, **negrita**, - para listas.
+                El editor visual guarda el artículo como Markdown.
               </p>
             </div>
 
