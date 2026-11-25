@@ -1,9 +1,9 @@
 -- ============================================================================
 --  Artículos del blog de Istmo Realty
 --
---  Cómo usarlo:
---   1. Ejecuta primero supabase/schema.sql (crea la tabla, RLS y el bucket).
---   2. Pega este archivo completo en el SQL Editor de Supabase y ejecútalo.
+--  Versión solo de artículos: úsala si ya creaste la tabla con schema.sql.
+--  Si empiezas de cero, prefiere supabase/blog-setup.sql, que hace todo
+--  (tabla, RLS, bucket y estos tres artículos) en un solo paso.
 --
 --  Es idempotente: si lo vuelves a ejecutar actualiza el texto de los artículos
 --  ya existentes en lugar de duplicarlos.

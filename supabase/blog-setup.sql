@@ -155,8 +155,9 @@ create policy "Authors can delete their blog images"
 --  Artículos del blog de Istmo Realty
 --
 --  Cómo usarlo:
---   1. Ejecuta primero supabase/schema.sql (crea la tabla, RLS y el bucket).
---   2. Pega este archivo completo en el SQL Editor de Supabase y ejecútalo.
+--   Pega este archivo completo en el SQL Editor de Supabase y ejecútalo.
+--   No hace falta ejecutar schema.sql antes: este archivo ya crea la tabla,
+--   las políticas RLS y el bucket blog-images.
 --
 --  Es idempotente: si lo vuelves a ejecutar actualiza el texto de los artículos
 --  ya existentes en lugar de duplicarlos.

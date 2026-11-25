@@ -260,4 +260,4 @@ values
 )
 on conflict (slug) do nothing;
 
--- Los artículos del blog están en supabase/blog-posts.sql
+-- Los artículos del blog están en supabase/blog-setup.sql

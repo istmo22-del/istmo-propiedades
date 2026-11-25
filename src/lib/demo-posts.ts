@@ -3,7 +3,7 @@ import type { Post } from "@/lib/types";
 /**
  * Artículos de ejemplo para el modo demostración (sin Supabase).
  * Al configurar Supabase se usan los artículos reales de la tabla posts
- * (supabase/blog-posts.sql carga estos mismos tres).
+ * (supabase/blog-setup.sql carga estos mismos tres).
  */
 export const DEMO_POSTS: Post[] = [
   {
