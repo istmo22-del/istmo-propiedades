@@ -82,6 +82,7 @@ export function PropertyForm({
   const [state, action, pending] = useActionState(savePropertyAction, null);
   const [province, setProvince] = useState(property?.province ?? "Panamá");
   const [district, setDistrict] = useState(property?.district ?? "");
+  const [imagesBusy, setImagesBusy] = useState(false);
 
   const districts = districtsOf(province);
   const districtOptions = districts.includes(district)
@@ -441,7 +442,11 @@ export function PropertyForm({
         description="La primera imagen se usa como portada en el listado y en las redes sociales."
       >
         <div className="sm:col-span-2">
-          <ImageManager initialImages={property?.images ?? []} demo={demo} />
+          <ImageManager
+            initialImages={property?.images ?? []}
+            demo={demo}
+            onBusyChange={setImagesBusy}
+          />
         </div>
       </FormSection>
 
@@ -487,13 +492,13 @@ export function PropertyForm({
           </Link>
           <button
             type="submit"
-            disabled={pending || demo}
+            disabled={pending || demo || imagesBusy}
             className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-deep px-5 text-[12.5px] font-semibold text-cream transition-colors hover:bg-deep-800 disabled:opacity-60"
           >
-            {pending ? (
+            {pending || imagesBusy ? (
               <>
                 <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                Guardando…
+                {imagesBusy ? "Optimizando imágenes…" : "Guardando…"}
               </>
             ) : (
               <>

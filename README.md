@@ -199,7 +199,7 @@ Consejos:
 
 - El slug se genera desde el título la primera vez y luego se mantiene, para no romper enlaces compartidos.
 - Si cambias el título, la URL pública no cambia.
-- Las imágenes se sirven sin optimización de Cloudflare, así que conviene subirlas ya comprimidas (JPG/WebP, ~1600 px de ancho).
+- Las fotos se optimizan automáticamente en el navegador antes de subirse: máximo 1600 px, WebP con calidad 82 y sin metadatos. Una foto de 670 KB queda en ~155 KB. No depende del plan de Vercel ni de Cloudflare.
 - El formulario acepta latitud y longitud opcionales para mejorar el mapa de la ficha.
 
 ---

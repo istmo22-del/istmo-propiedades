@@ -8,8 +8,11 @@ export const PAGE_SIZE = 9;
 /** Máximo de imágenes por propiedad. */
 export const MAX_IMAGES = 10;
 
-/** Tamaño máximo por imagen (5 MB, igual que el límite del bucket). */
+/** Tamaño máximo por imagen ya optimizada (5 MB, igual que el límite del bucket). */
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+
+/** Tamaño máximo del archivo original antes de optimizarlo en el navegador. */
+export const MAX_SOURCE_IMAGE_BYTES = 20 * 1024 * 1024;
 
 export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 

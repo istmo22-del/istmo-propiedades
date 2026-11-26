@@ -2,6 +2,7 @@
 
 import {
   useActionState,
+  useEffect,
   useRef,
   useState,
   type ChangeEvent,
@@ -25,7 +26,13 @@ import {
   deletePostAction,
   savePostAction,
 } from "@/app/admin/(panel)/blog/actions";
-import { ACCEPTED_IMAGE_TYPES, POST_STATUS_META } from "@/lib/constants";
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_IMAGE_BYTES,
+  MAX_SOURCE_IMAGE_BYTES,
+  POST_STATUS_META,
+} from "@/lib/constants";
+import { optimizeImage } from "@/lib/optimize-image";
 import type { Post } from "@/lib/types";
 import { cn, slugify } from "@/lib/utils";
 import { MarkdownToolbar } from "@/components/admin/markdown-toolbar";
@@ -97,6 +104,15 @@ export function PostForm({
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const [tab, setTab] = useState<"visual" | "markdown">("visual");
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [coverBusy, setCoverBusy] = useState(false);
+  const [coverError, setCoverError] = useState<string | null>(null);
+  const coverObjectUrl = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (coverObjectUrl.current) URL.revokeObjectURL(coverObjectUrl.current);
+    };
+  }, []);
 
   const existingCover = post?.cover_image ?? "";
   const fieldError = (name: string) => state?.fieldErrors?.[name]?.[0];
@@ -106,9 +122,55 @@ export function PostForm({
     if (!slugEdited) setSlug(slugify(value));
   }
 
-  function handleCover(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    setCoverPreview(file ? URL.createObjectURL(file) : null);
+  function showCoverPreview(file: File | null) {
+    if (coverObjectUrl.current) URL.revokeObjectURL(coverObjectUrl.current);
+    coverObjectUrl.current = file ? URL.createObjectURL(file) : null;
+    setCoverPreview(coverObjectUrl.current);
+  }
+
+  async function handleCover(event: ChangeEvent<HTMLInputElement>) {
+    const input = event.currentTarget;
+    const file = input.files?.[0];
+    setCoverError(null);
+
+    if (!file) {
+      showCoverPreview(null);
+      return;
+    }
+
+    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      setCoverError("Formato no válido. Usa JPG, PNG, WebP o AVIF.");
+      input.value = "";
+      showCoverPreview(null);
+      return;
+    }
+
+    if (file.size > MAX_SOURCE_IMAGE_BYTES) {
+      setCoverError("La imagen original no puede superar 20 MB.");
+      input.value = "";
+      showCoverPreview(null);
+      return;
+    }
+
+    setCoverBusy(true);
+
+    try {
+      const optimized = await optimizeImage(file);
+
+      if (optimized.size > MAX_IMAGE_BYTES) {
+        setCoverError("La portada sigue superando 5 MB después de optimizarla.");
+        input.value = "";
+        showCoverPreview(null);
+        return;
+      }
+
+      const transfer = new DataTransfer();
+      transfer.items.add(optimized);
+      input.files = transfer.files;
+      showCoverPreview(optimized);
+    } finally {
+      setCoverBusy(false);
+    }
   }
 
   function confirmDelete(event: MouseEvent<HTMLButtonElement>) {
@@ -327,7 +389,7 @@ export function PostForm({
 
           <div>
             <label htmlFor="cover" className="label">
-              Subir imagen (JPG, PNG, WebP o AVIF · máx. 5 MB)
+              Subir imagen (JPG, PNG, WebP o AVIF · se optimiza automáticamente)
             </label>
             <input
               id="cover"
@@ -335,10 +397,21 @@ export function PostForm({
               type="file"
               accept={ACCEPTED_IMAGE_TYPES.join(",")}
               onChange={handleCover}
+              disabled={coverBusy}
               className="block w-full text-[12.5px] text-muted file:mr-3 file:h-9 file:rounded-full file:border-0 file:bg-sand file:px-4 file:text-[12.5px] file:font-semibold file:text-ink"
             />
+            {coverBusy && (
+              <p className="mt-2 flex items-center gap-1.5 text-[11.5px] font-semibold text-teal">
+                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+                Optimizando portada…
+              </p>
+            )}
+            {coverError && (
+              <p className="mt-2 text-[11.5px] text-red-700">{coverError}</p>
+            )}
             <p className="mt-2 text-[11.5px] leading-5 text-muted">
-              Si no subes una, el artículo usa una portada con tu marca.
+              Se reduce a 1600 px y se convierte a WebP. Si no subes una, el artículo usa
+              una portada con tu marca.
             </p>
           </div>
         </div>
@@ -357,7 +430,7 @@ export function PostForm({
             type="submit"
             name="status"
             value="draft"
-            disabled={pending}
+            disabled={pending || coverBusy}
             className={buttonClasses({ variant: "outline", size: "md" })}
           >
             <Save className="size-4" aria-hidden="true" />
@@ -367,7 +440,7 @@ export function PostForm({
             type="submit"
             name="status"
             value="published"
-            disabled={pending}
+            disabled={pending || coverBusy}
             className={buttonClasses({ size: "md" })}
           >
             {pending ? (

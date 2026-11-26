@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
   // Cloudflare no incluye optimización de imágenes en el plan gratuito.
   // Las imágenes se sirven ya optimizadas desde Supabase Storage / Unsplash.
   images: { unoptimized: true },
+  // Las fotos se optimizan en el navegador, pero un formulario con varias
+  // imágenes puede superar el límite por defecto de 1 MB de las server actions.
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "12mb",
+    },
+  },
   async headers() {
     return [
       {

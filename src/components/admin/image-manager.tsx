@@ -1,10 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ImagePlus, Star, Trash2, UploadCloud } from "lucide-react";
+import { ImagePlus, Loader2, Star, Trash2, UploadCloud } from "lucide-react";
 
-import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES, MAX_IMAGES } from "@/lib/constants";
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_IMAGE_BYTES,
+  MAX_IMAGES,
+  MAX_SOURCE_IMAGE_BYTES,
+} from "@/lib/constants";
 import { imageUrl } from "@/lib/images";
+import { optimizeImage } from "@/lib/optimize-image";
 import { cn } from "@/lib/utils";
 
 type Picked = { file: File; url: string };
@@ -12,21 +18,25 @@ type Picked = { file: File; url: string };
 export function ImageManager({
   initialImages,
   demo = false,
+  onBusyChange,
 }: {
   initialImages: string[];
   demo?: boolean;
+  onBusyChange?: (busy: boolean) => void;
 }) {
   const [existing, setExisting] = useState<string[]>(initialImages);
   const [picked, setPicked] = useState<Picked[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const pickedRef = useRef<Picked[]>([]);
 
   pickedRef.current = picked;
   const total = existing.length + picked.length;
   const atLimit = total >= MAX_IMAGES;
-  const canAdd = !demo && !atLimit;
+  const canAdd = !demo && !atLimit && !busy;
 
   useEffect(() => {
     return () => {
@@ -41,9 +51,9 @@ export function ImageManager({
     inputRef.current.files = transfer.files;
   }
 
-  function addFiles(selected: File[]) {
+  async function addFiles(selected: File[]) {
     setError(null);
-    if (demo) return;
+    if (demo || busy) return;
 
     const remaining = MAX_IMAGES - total;
     if (remaining <= 0) {
@@ -51,17 +61,39 @@ export function ImageManager({
       return;
     }
 
+    const candidates = selected.slice(0, remaining);
     const accepted: Picked[] = [];
-    for (const file of selected.slice(0, remaining)) {
-      if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-        setError(`“${file.name}” no es una imagen válida. Usa JPG, PNG, WebP o AVIF.`);
-        continue;
+
+    setBusy(true);
+    onBusyChange?.(true);
+
+    try {
+      for (let index = 0; index < candidates.length; index += 1) {
+        const file = candidates[index];
+        setStatus(`Optimizando ${index + 1} de ${candidates.length}…`);
+
+        if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+          setError(`“${file.name}” no es una imagen válida. Usa JPG, PNG, WebP o AVIF.`);
+          continue;
+        }
+        if (file.size > MAX_SOURCE_IMAGE_BYTES) {
+          setError(`“${file.name}” supera los 20 MB.`);
+          continue;
+        }
+
+        const optimized = await optimizeImage(file);
+
+        if (optimized.size > MAX_IMAGE_BYTES) {
+          setError(`“${file.name}” sigue superando los 5 MB después de optimizarla.`);
+          continue;
+        }
+
+        accepted.push({ file: optimized, url: URL.createObjectURL(optimized) });
       }
-      if (file.size > MAX_IMAGE_BYTES) {
-        setError(`“${file.name}” supera los 5 MB.`);
-        continue;
-      }
-      accepted.push({ file, url: URL.createObjectURL(file) });
+    } finally {
+      setBusy(false);
+      setStatus(null);
+      onBusyChange?.(false);
     }
 
     if (selected.length > remaining && accepted.length > 0) {
@@ -69,7 +101,7 @@ export function ImageManager({
     }
 
     if (accepted.length === 0) return;
-    const next = [...picked, ...accepted];
+    const next = [...pickedRef.current, ...accepted];
     setPicked(next);
     syncInput(next.map((item) => item.file));
   }
@@ -127,19 +159,27 @@ export function ImageManager({
           )}
         >
           <span className="grid size-11 place-items-center rounded-full bg-white text-teal ring-1 ring-line">
-            <UploadCloud className="size-5" aria-hidden="true" />
+            {busy ? (
+              <Loader2 className="size-5 animate-spin" aria-hidden="true" />
+            ) : (
+              <UploadCloud className="size-5" aria-hidden="true" />
+            )}
           </span>
           <span className="text-[13px] font-semibold text-ink">
-            {demo
-              ? "Las imágenes se activan con Supabase"
-              : atLimit
-                ? "Límite alcanzado"
-                : "Agregar imágenes"}
+            {busy
+              ? "Optimizando imágenes…"
+              : demo
+                ? "Las imágenes se activan con Supabase"
+                : atLimit
+                  ? "Límite alcanzado"
+                  : "Agregar imágenes"}
           </span>
           <span className="text-[11.5px] text-muted">
-            {demo
-              ? "En modo demostración no se pueden subir fotos."
-              : "Arrastra archivos o haz clic aquí · JPG, PNG, WebP o AVIF · máx. 5 MB"}
+            {busy
+              ? (status ?? "Convirtiendo a WebP…")
+              : demo
+                ? "En modo demostración no se pueden subir fotos."
+                : "Arrastra archivos o haz clic aquí · se optimizan a WebP (máx. 1600 px)"}
           </span>
           <input
             ref={inputRef}
