@@ -251,8 +251,13 @@ Sin las dos primeras, la app funciona en modo demostración.
 
 ## Estructura del proyecto
 
+El historial de cambios y las decisiones (por qué se hizo cada cosa) están en
+[`docs/historial.md`](docs/historial.md).
+
 ```text
 istmo-propiedades/
+├── docs/
+│   └── historial.md            # Qué se hizo, por qué y qué queda pendiente
 ├── public/                     # Imágenes estáticas, placeholder, _headers
 ├── src/
 │   ├── app/
