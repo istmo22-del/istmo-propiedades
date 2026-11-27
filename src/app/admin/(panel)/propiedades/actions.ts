@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import type { Database } from "@/lib/database.types";
 import { getCurrentUser } from "@/lib/auth";
-import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES, MAX_IMAGES } from "@/lib/constants";
+import { MAX_IMAGES } from "@/lib/constants";
 import { IMAGE_BUCKET } from "@/lib/images";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
@@ -15,13 +15,6 @@ import { slugify } from "@/lib/utils";
 import { parseExistingImages, parsePropertyForm } from "@/lib/validation";
 
 type Supabase = Awaited<ReturnType<typeof createClient>>;
-
-const EXTENSIONS: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-  "image/avif": "avif",
-};
 
 function isHttpUrl(value: string): boolean {
   return /^https?:\/\//i.test(value);
@@ -105,59 +98,20 @@ export async function savePropertyAction(
     currentSlug = current.slug;
   }
 
-  const existingImages = id
-    ? parseExistingImages(formData).filter(
-        (image) => currentImages.includes(image) || image.startsWith(`${user.id}/`) || isHttpUrl(image),
-      )
-    : [];
+  // Las fotos se suben al instante desde el gestor de imágenes, así que aquí
+  // solo llegan rutas ya guardadas en Storage (o URLs externas del seed).
+  const submittedImages = parseExistingImages(formData).filter(
+    (image) =>
+      isHttpUrl(image) ||
+      image.startsWith(`${user.id}/`) ||
+      (id !== null && currentImages.includes(image)),
+  );
 
-  const uploaded = formData
-    .getAll("new_images")
-    .filter((item): item is File => item instanceof File && item.size > 0);
-
-  if (existingImages.length + uploaded.length > MAX_IMAGES) {
+  if (submittedImages.length > MAX_IMAGES) {
     return { error: `Puedes guardar hasta ${MAX_IMAGES} imágenes por propiedad.` };
   }
 
-  for (const file of uploaded) {
-    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-      return {
-        error: `“${file.name}” no es un formato válido. Usa JPG, PNG, WebP o AVIF.`,
-        fieldErrors: { new_images: ["Formato de imagen no permitido."] },
-      };
-    }
-    if (file.size > MAX_IMAGE_BYTES) {
-      return {
-        error: `“${file.name}” supera los 5 MB. Comprime la imagen e intenta de nuevo.`,
-        fieldErrors: { new_images: ["La imagen supera el tamaño máximo de 5 MB."] },
-      };
-    }
-  }
-
-  // Subida de imágenes nuevas
-  const uploadedPaths: string[] = [];
-  for (const file of uploaded) {
-    const extension = EXTENSIONS[file.type] ?? "jpg";
-    const path = `${user.id}/${crypto.randomUUID()}.${extension}`;
-    const { error: uploadError } = await supabase.storage
-      .from(IMAGE_BUCKET)
-      .upload(path, await file.arrayBuffer(), {
-        contentType: file.type,
-        cacheControl: "31536000",
-        upsert: false,
-      });
-
-    if (uploadError) {
-      await removeStorageObjects(supabase, uploadedPaths, user.id);
-      return {
-        error: `No pudimos subir “${file.name}”. Intenta de nuevo. (${uploadError.message})`,
-      };
-    }
-
-    uploadedPaths.push(path);
-  }
-
-  const allImages = [...existingImages, ...uploadedPaths];
+  const allImages = submittedImages;
 
   const baseSlug = slugify(fields.title) || `propiedad-${Date.now().toString(36)}`;
   const slug = id
@@ -202,16 +156,14 @@ export async function savePropertyAction(
       .maybeSingle();
 
     if (updateError || !updated) {
-      await removeStorageObjects(supabase, uploadedPaths, user.id);
       return { error: "No pudimos actualizar la propiedad. Intenta de nuevo." };
     }
 
-    const removedImages = currentImages.filter((image) => !existingImages.includes(image));
+    const removedImages = currentImages.filter((image) => !submittedImages.includes(image));
     await removeStorageObjects(supabase, removedImages, user.id);
   } else {
     const { error: insertError } = await supabase.from("properties").insert(payload);
     if (insertError) {
-      await removeStorageObjects(supabase, uploadedPaths, user.id);
       console.error("[properties] insert:", insertError.message);
       return { error: "No pudimos crear la propiedad. Revisa los datos e intenta de nuevo." };
     }

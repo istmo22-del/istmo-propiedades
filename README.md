@@ -199,7 +199,8 @@ Consejos:
 
 - El slug se genera desde el título la primera vez y luego se mantiene, para no romper enlaces compartidos.
 - Si cambias el título, la URL pública no cambia.
-- Las fotos se optimizan automáticamente en el navegador antes de subirse: máximo 1600 px, WebP con calidad 82 y sin metadatos. Una foto de 670 KB queda en ~155 KB. No depende del plan de Vercel ni de Cloudflare.
+- Las fotos se optimizan y se suben **una por una** al elegirlas: el navegador las reduce (máx. 1600 px, WebP, sin metadatos) y el servidor las normaliza de nuevo con `sharp` como garantía, así funciona igual en cualquier móvil o navegador. Cada petición pesa ~200 KB, muy lejos del límite de Vercel, y si una foto falla no se pierde el resto del lote. Una foto de 670 KB queda en ~155 KB.
+- Las imágenes que ya estaban subidas no se reprocesan: solo se optimizan las nuevas.
 - El formulario acepta latitud y longitud opcionales para mejorar el mapa de la ficha.
 
 ---

@@ -187,7 +187,7 @@ export async function savePostAction(
   }
 
   // Limpieza: si la portada cambió, borra la anterior del bucket.
-  if (uploadedPath && currentCover && currentCover !== coverImage) {
+  if (currentCover && currentCover !== coverImage) {
     await removeCover(supabase, currentCover, user.id);
   }
 

@@ -14,6 +14,12 @@ export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 /** Tamaño máximo del archivo original antes de optimizarlo en el navegador. */
 export const MAX_SOURCE_IMAGE_BYTES = 20 * 1024 * 1024;
 
+/**
+ * Límite real por petición en Vercel (4,5 MB en funciones serverless).
+ * Cada foto se sube sola, así que basta con que una no lo supere.
+ */
+export const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
+
 export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 
 export const POST_STATUS_META: Record<

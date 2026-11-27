@@ -26,10 +26,11 @@ import {
   deletePostAction,
   savePostAction,
 } from "@/app/admin/(panel)/blog/actions";
+import { uploadBlogCoverAction } from "@/app/admin/(panel)/blog/upload-action";
 import {
   ACCEPTED_IMAGE_TYPES,
-  MAX_IMAGE_BYTES,
   MAX_SOURCE_IMAGE_BYTES,
+  MAX_UPLOAD_BYTES,
   POST_STATUS_META,
 } from "@/lib/constants";
 import { optimizeImage } from "@/lib/optimize-image";
@@ -104,6 +105,7 @@ export function PostForm({
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const [tab, setTab] = useState<"visual" | "markdown">("visual");
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [coverValue, setCoverValue] = useState(post?.cover_image ?? "");
   const [coverBusy, setCoverBusy] = useState(false);
   const [coverError, setCoverError] = useState<string | null>(null);
   const coverObjectUrl = useRef<string | null>(null);
@@ -114,7 +116,6 @@ export function PostForm({
     };
   }, []);
 
-  const existingCover = post?.cover_image ?? "";
   const fieldError = (name: string) => state?.fieldErrors?.[name]?.[0];
 
   function handleTitle(value: string) {
@@ -157,18 +158,30 @@ export function PostForm({
     try {
       const optimized = await optimizeImage(file);
 
-      if (optimized.size > MAX_IMAGE_BYTES) {
-        setCoverError("La portada sigue superando 5 MB después de optimizarla.");
-        input.value = "";
+      if (optimized.size > MAX_UPLOAD_BYTES) {
+        setCoverError("La portada quedó demasiado pesada para subirla. Prueba con otra imagen.");
         showCoverPreview(null);
         return;
       }
 
-      const transfer = new DataTransfer();
-      transfer.items.add(optimized);
-      input.files = transfer.files;
+      // Se sube al instante: el formulario solo guarda la URL resultante.
+      const formData = new FormData();
+      formData.append("file", optimized);
+      const result = await uploadBlogCoverAction(formData);
+
+      if ("error" in result) {
+        setCoverError(result.error);
+        showCoverPreview(null);
+        return;
+      }
+
+      setCoverValue(result.url);
       showCoverPreview(optimized);
+    } catch {
+      setCoverError("No pudimos subir la portada. Intenta de nuevo.");
+      showCoverPreview(null);
     } finally {
+      input.value = "";
       setCoverBusy(false);
     }
   }
@@ -184,7 +197,7 @@ export function PostForm({
   return (
     <form action={action} className="space-y-5">
       {post?.id && <input type="hidden" name="id" value={post.id} />}
-      <input type="hidden" name="cover_image" value={existingCover} />
+      <input type="hidden" name="cover_image" value={coverValue} />
 
       {state?.error && (
         <div className="flex gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[12.5px] leading-5 text-red-800">
@@ -374,9 +387,9 @@ export function PostForm({
 
         <div className="grid gap-4 sm:grid-cols-[220px_1fr] sm:items-start">
           <div className="overflow-hidden rounded-xl border border-line bg-sand">
-            {coverPreview || existingCover ? (
+            {coverPreview || coverValue ? (
               <img
-                src={coverPreview ?? existingCover}
+                src={coverPreview ?? coverValue}
                 alt="Portada del artículo"
                 className="aspect-[16/10] w-full object-cover"
               />
@@ -393,7 +406,6 @@ export function PostForm({
             </label>
             <input
               id="cover"
-              name="cover"
               type="file"
               accept={ACCEPTED_IMAGE_TYPES.join(",")}
               onChange={handleCover}
@@ -403,7 +415,7 @@ export function PostForm({
             {coverBusy && (
               <p className="mt-2 flex items-center gap-1.5 text-[11.5px] font-semibold text-teal">
                 <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
-                Optimizando portada…
+                Optimizando y subiendo la portada…
               </p>
             )}
             {coverError && (
