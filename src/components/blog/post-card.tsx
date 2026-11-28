@@ -6,6 +6,7 @@ import { readingMinutes } from "@/lib/posts";
 import type { Post } from "@/lib/types";
 import { cn, formatDate } from "@/lib/utils";
 import { IstmoMark } from "@/components/ui/logo";
+import { revealDelay as revealDelayStyle } from "@/components/ui/reveal";
 
 function PostCover({ post, className }: { post: Post; className?: string }) {
   if (!post.cover_image) {
@@ -23,7 +24,7 @@ function PostCover({ post, className }: { post: Post; className?: string }) {
   }
 
   return (
-    <div className={cn("overflow-hidden bg-sand", className)}>
+    <div className={cn("overflow-hidden bg-sand", className)} data-reveal-image="">
       <img
         src={imageUrl(post.cover_image)}
         alt=""
@@ -37,14 +38,19 @@ function PostCover({ post, className }: { post: Post; className?: string }) {
 export function PostCard({
   post,
   featured = false,
+  revealDelay,
 }: {
   post: Post;
   featured?: boolean;
+  revealDelay?: number;
 }) {
   const date = post.published_at ?? post.created_at;
 
   return (
-    <article>
+    <article
+      data-reveal={revealDelay === undefined ? undefined : ""}
+      style={revealDelay === undefined ? undefined : revealDelayStyle(revealDelay)}
+    >
       <Link
         href={`/blog/${post.slug}`}
         className={cn(

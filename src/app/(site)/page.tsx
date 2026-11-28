@@ -22,6 +22,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { CategoryIcon } from "@/components/ui/category-icon";
 import { HeroSearch } from "@/components/search/hero-search";
 import { PropertyCard } from "@/components/properties/property-card";
+import { revealDelay } from "@/components/ui/reveal";
 
 export const dynamic = "force-dynamic";
 
@@ -104,7 +105,7 @@ export default async function HomePage() {
         <img
           src="/hero.jpg"
           alt="Villa con piscina rodeada de palmeras en Panamá"
-          className="absolute inset-0 -z-10 h-full w-full object-cover"
+          className="hero-drift absolute inset-0 -z-10 h-full w-full object-cover"
           fetchPriority="high"
         />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/75 via-ink/35 to-ink/85" />
@@ -147,21 +148,36 @@ export default async function HomePage() {
         <div className="container-page flex flex-wrap items-center justify-between gap-6 py-7">
           <div className="flex flex-wrap items-center gap-x-10 gap-y-5">
             <div>
-              <p className="font-display text-2xl leading-none">{formatNumber(total)}</p>
+              <p
+                className="font-display text-2xl leading-none tabular-nums"
+                data-count-to={total}
+              >
+                {formatNumber(total)}
+              </p>
               <p className="mt-1.5 text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">
                 Propiedades activas
               </p>
             </div>
             <div className="h-10 w-px bg-line" aria-hidden="true" />
             <div>
-              <p className="font-display text-2xl leading-none">{provinces.length}</p>
+              <p
+                className="font-display text-2xl leading-none tabular-nums"
+                data-count-to={provinces.length}
+              >
+                {provinces.length}
+              </p>
               <p className="mt-1.5 text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">
                 Provincias
               </p>
             </div>
             <div className="h-10 w-px bg-line" aria-hidden="true" />
             <div>
-              <p className="font-display text-2xl leading-none">{categories.length}</p>
+              <p
+                className="font-display text-2xl leading-none tabular-nums"
+                data-count-to={categories.length}
+              >
+                {categories.length}
+              </p>
               <p className="mt-1.5 text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">
                 Tipos de propiedad
               </p>
@@ -193,7 +209,10 @@ export default async function HomePage() {
             }`}
           >
             <div className="container-page">
-              <div className="flex flex-wrap items-end justify-between gap-6">
+              <div
+                className="flex flex-wrap items-end justify-between gap-6"
+                data-reveal=""
+              >
                 <div className="max-w-2xl">
                   <p className="eyebrow flex items-center gap-2.5 text-gold">
                     <span
@@ -220,6 +239,7 @@ export default async function HomePage() {
                     key={property.id}
                     property={property}
                     eager={index === 0 && itemIndex === 0}
+                    revealDelay={itemIndex}
                   />
                 ))}
               </div>
@@ -231,7 +251,10 @@ export default async function HomePage() {
       {/* Destacadas */}
       <section className="py-20 lg:py-24">
         <div className="container-page">
-          <div className="flex flex-wrap items-end justify-between gap-6">
+          <div
+            className="flex flex-wrap items-end justify-between gap-6"
+            data-reveal=""
+          >
             <div>
               <p className="eyebrow text-gold">Selección destacada</p>
               <h2 className="mt-3 max-w-xl text-balance font-display text-4xl leading-[1.1] sm:text-[42px]">
@@ -247,7 +270,12 @@ export default async function HomePage() {
           {featured.length > 0 ? (
             <div className="mt-10 grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
               {featured.map((property, index) => (
-                <PropertyCard key={property.id} property={property} eager={index === 0} />
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  eager={index === 0}
+                  revealDelay={index}
+                />
               ))}
             </div>
           ) : (
@@ -268,7 +296,7 @@ export default async function HomePage() {
       {/* Categorías */}
       <section className="bg-sand py-20 lg:py-24">
         <div className="container-page">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl" data-reveal="">
             <p className="eyebrow text-gold">Explora a tu manera</p>
             <h2 className="mt-3 font-display text-4xl leading-[1.1] sm:text-[42px]">
               ¿Qué tipo de propiedad buscas?
@@ -281,24 +309,25 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                href={`/propiedades?type=${encodeURIComponent(category.name)}`}
-                className="group flex flex-col justify-between gap-8 rounded-2xl bg-cream/70 p-4 ring-1 ring-line transition-colors hover:bg-white hover:ring-gold/40"
-              >
-                <span className="grid size-11 place-items-center rounded-xl bg-deep/[0.06] text-teal transition-colors group-hover:bg-deep group-hover:text-cream">
-                  <CategoryIcon category={category.name} className="size-5" />
-                </span>
-                <span>
-                  <span className="block text-[13px] leading-snug font-semibold text-ink">
-                    {category.name}
+            {categories.map((category, index) => (
+              <div key={category.name} data-reveal="" style={revealDelay(index)}>
+                <Link
+                  href={`/propiedades?type=${encodeURIComponent(category.name)}`}
+                  className="group flex h-full flex-col justify-between gap-8 rounded-2xl bg-cream/70 p-4 ring-1 ring-line transition-colors hover:bg-white hover:ring-gold/40"
+                >
+                  <span className="grid size-11 place-items-center rounded-xl bg-deep/[0.06] text-teal transition-colors group-hover:bg-deep group-hover:text-cream">
+                    <CategoryIcon category={category.name} className="size-5" />
                   </span>
-                  <span className="mt-1 block text-[11.5px] text-muted">
-                    {category.count} {category.count === 1 ? "propiedad" : "propiedades"}
+                  <span>
+                    <span className="block text-[13px] leading-snug font-semibold text-ink">
+                      {category.name}
+                    </span>
+                    <span className="mt-1 block text-[11.5px] text-muted">
+                      {category.count} {category.count === 1 ? "propiedad" : "propiedades"}
+                    </span>
                   </span>
-                </span>
-              </Link>
+                </Link>
+              </div>
             ))}
           </div>
         </div>
@@ -307,7 +336,7 @@ export default async function HomePage() {
       {/* Provincias */}
       <section className="py-20 lg:py-28">
         <div className="container-page grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-          <div className="lg:sticky lg:top-28 lg:self-start">
+          <div className="lg:sticky lg:top-28 lg:self-start" data-reveal="">
             <p className="eyebrow text-gold">De costa a montaña</p>
             <h2 className="mt-3 font-display text-4xl leading-[1.1] sm:text-[42px]">
               Explora por provincia.
@@ -324,25 +353,26 @@ export default async function HomePage() {
           </div>
 
           <div className="border-t border-line">
-            {provinces.map((province) => (
-              <Link
-                key={province.name}
-                href={`/propiedades?province=${encodeURIComponent(province.name)}`}
-                className="group flex items-center justify-between gap-6 border-b border-line py-5 transition-colors hover:bg-sand/50"
-              >
-                <span className="flex items-center gap-3">
-                  <MapPin className="size-4 text-gold" aria-hidden="true" />
-                  <span className="font-display text-[22px] tracking-tight text-ink transition-colors group-hover:text-teal">
-                    {province.name}
+            {provinces.map((province, index) => (
+              <div key={province.name} data-reveal="" style={revealDelay(index)}>
+                <Link
+                  href={`/propiedades?province=${encodeURIComponent(province.name)}`}
+                  className="group flex items-center justify-between gap-6 border-b border-line py-5 transition-colors hover:bg-sand/50"
+                >
+                  <span className="flex items-center gap-3">
+                    <MapPin className="size-4 text-gold" aria-hidden="true" />
+                    <span className="font-display text-[22px] tracking-tight text-ink transition-colors group-hover:text-teal">
+                      {province.name}
+                    </span>
                   </span>
-                </span>
-                <span className="flex items-center gap-4 text-[12px] text-muted">
-                  {province.count} {province.count === 1 ? "propiedad" : "propiedades"}
-                  <span className="grid size-8 place-items-center rounded-full border border-line transition-all group-hover:border-deep group-hover:bg-deep group-hover:text-cream">
-                    <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                  <span className="flex items-center gap-4 text-[12px] text-muted">
+                    {province.count} {province.count === 1 ? "propiedad" : "propiedades"}
+                    <span className="grid size-8 place-items-center rounded-full border border-line transition-all group-hover:border-deep group-hover:bg-deep group-hover:text-cream">
+                      <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                    </span>
                   </span>
-                </span>
-              </Link>
+                </Link>
+              </div>
             ))}
           </div>
         </div>
@@ -351,13 +381,14 @@ export default async function HomePage() {
       {/* Nosotros */}
       <section className="bg-sand py-20 lg:py-28">
         <div className="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          <div className="relative">
+          <div className="relative" data-reveal="">
             <div className="overflow-hidden rounded-[2rem]">
               <img
                 src="/about.jpg"
                 alt="Villa contemporánea con piscina"
                 loading="lazy"
                 className="aspect-[4/3] w-full object-cover"
+                data-reveal-image=""
               />
             </div>
             <div className="absolute -bottom-5 left-5 rounded-2xl bg-deep px-5 py-4 text-cream shadow-soft sm:left-8">
@@ -368,7 +399,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div>
+          <div data-reveal="" style={revealDelay(1)}>
             <p className="eyebrow text-gold">Nuestra forma de trabajar</p>
             <h2 className="mt-3 text-balance font-display text-4xl leading-[1.1] sm:text-[42px]">
               Bienes raíces con criterio local.
@@ -404,7 +435,10 @@ export default async function HomePage() {
       {/* CTA */}
       <section className="py-20 lg:py-24">
         <div className="container-page">
-          <div className="relative isolate overflow-hidden rounded-[2rem] bg-deep px-6 py-14 text-cream sm:px-12 lg:px-16 lg:py-20">
+          <div
+            className="relative isolate overflow-hidden rounded-[2rem] bg-deep px-6 py-14 text-cream sm:px-12 lg:px-16 lg:py-20"
+            data-reveal=""
+          >
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_120%_at_85%_10%,rgba(232,185,63,0.26),transparent_60%)]" />
             <div className="absolute -right-10 -bottom-16 -z-10 font-display text-[220px] leading-none text-white/[0.035] select-none">
               Istmo

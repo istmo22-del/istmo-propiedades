@@ -1,3 +1,4 @@
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { WhatsAppFloat } from "@/components/layout/whatsapp-float";
@@ -9,6 +10,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <main>{children}</main>
       <SiteFooter />
       <WhatsAppFloat />
+      <ScrollReveal />
     </>
   );
 }

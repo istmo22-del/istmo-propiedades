@@ -181,8 +181,8 @@ export default async function BlogPostPage({ params }: PageProps) {
               <h2 className="mt-2.5 font-display text-3xl sm:text-4xl">Más artículos</h2>
 
               <div className="mt-8 grid gap-x-6 gap-y-11 sm:grid-cols-2 lg:grid-cols-3">
-                {related.map((item) => (
-                  <PostCard key={item.id} post={item} />
+                {related.map((item, index) => (
+                  <PostCard key={item.id} post={item} revealDelay={index % 3} />
                 ))}
               </div>
             </div>

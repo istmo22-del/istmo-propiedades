@@ -128,7 +128,12 @@ export default async function PropertiesPage({ searchParams }: PageProps) {
               <>
                 <div className="mt-7 grid gap-x-6 gap-y-11 sm:grid-cols-2 xl:grid-cols-3">
                   {items.map((property, index) => (
-                    <PropertyCard key={property.id} property={property} eager={index < 3} />
+                    <PropertyCard
+                      key={property.id}
+                      property={property}
+                      eager={index < 3}
+                      revealDelay={index % 3}
+                    />
                   ))}
                 </div>
                 <Pagination page={page} pageCount={pageCount} filters={filters} />

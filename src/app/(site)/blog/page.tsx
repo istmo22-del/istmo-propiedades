@@ -55,8 +55,8 @@ export default async function BlogPage() {
 
             {rest.length > 0 && (
               <div className="mt-14 grid gap-x-6 gap-y-12 border-t border-line pt-14 sm:grid-cols-2 lg:grid-cols-3">
-                {rest.map((post) => (
-                  <PostCard key={post.id} post={post} />
+                {rest.map((post, index) => (
+                  <PostCard key={post.id} post={post} revealDelay={index % 3} />
                 ))}
               </div>
             )}

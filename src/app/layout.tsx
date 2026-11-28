@@ -63,7 +63,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${manrope.variable} ${fraunces.variable}`}>
+    <html
+      lang="es"
+      className={`${manrope.variable} ${fraunces.variable}`}
+      data-scroll-behavior="smooth"
+    >
       <body className="min-h-dvh bg-cream text-ink">{children}</body>
     </html>
   );

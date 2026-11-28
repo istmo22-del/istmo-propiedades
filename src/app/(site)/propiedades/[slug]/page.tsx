@@ -372,8 +372,8 @@ export default async function PropertyPage({ params }: PageProps) {
               </div>
 
               <div className="mt-8 grid gap-x-6 gap-y-11 sm:grid-cols-2 lg:grid-cols-3">
-                {similar.map((item) => (
-                  <PropertyCard key={item.id} property={item} />
+                {similar.map((item, index) => (
+                  <PropertyCard key={item.id} property={item} revealDelay={index % 3} />
                 ))}
               </div>
             </div>

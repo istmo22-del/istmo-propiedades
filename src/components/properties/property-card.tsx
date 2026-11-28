@@ -5,13 +5,16 @@ import type { Property } from "@/lib/types";
 import { formatArea, formatPrice, propertyLocation } from "@/lib/utils";
 import { imageUrl } from "@/lib/images";
 import { Badge } from "@/components/ui/badge";
+import { revealDelay as revealDelayStyle } from "@/components/ui/reveal";
 
 export function PropertyCard({
   property,
   eager = false,
+  revealDelay,
 }: {
   property: Property;
   eager?: boolean;
+  revealDelay?: number;
 }) {
   const href = `/propiedades/${property.slug ?? property.id}`;
 
@@ -31,9 +34,16 @@ export function PropertyCard({
   ].filter((spec): spec is { icon: typeof BedDouble; label: string } => Boolean(spec));
 
   return (
-    <article className="group">
+    <article
+      className="group"
+      data-reveal={revealDelay === undefined ? undefined : ""}
+      style={revealDelay === undefined ? undefined : revealDelayStyle(revealDelay)}
+    >
       <Link href={href} className="block">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-[1.35rem] bg-sand">
+        <div
+          className="relative aspect-[4/3] overflow-hidden rounded-[1.35rem] bg-sand"
+          data-reveal-image=""
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imageUrl(property.images[0])}
