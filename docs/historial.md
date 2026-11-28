@@ -138,6 +138,7 @@ supabase/blog-posts.sql  Artículos iniciales
 4. **Miniaturas para listados** (p. ej. 400 px): menos peso en las páginas de catálogo.
 5. **Conectar `istmorealty.com`** o confirmar el dominio definitivo.
 6. Revisar si conviene migrar de Vercel a VPS/cPanel según el uso real.
+7. **Revelado scroll con CSS puro** (`animation-timeline: view()`, `--reveal-delay` por tiempo, 900 ms) — reemplaza IntersectionObserver + JS; visible incluso si se salta o baja rápido; respeta `prefers-reduced-motion`.
 
 ---
 
